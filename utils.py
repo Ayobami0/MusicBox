@@ -25,10 +25,10 @@ def show_metadata(music: Music) -> None:
     meta = music.metadata
     length = datetime.timedelta(seconds=int(meta.info.length))
     metadata = f"""
-TITLE:  {meta.get('TIT2')}
-ARTIST: {meta.get('TPE1')}
-LENGTH: {length}
-ALBUM:  {meta.get('TALB')}
-TRACK:  {meta.get('TRCK')}
+TITLE  : {meta.get('TIT2')}
+ARTIST : {meta.get('TPE1')}
+LENGTH : {length}
+ALBUM  : {meta.get('TALB')}
+TRACK  : {meta.get('TRCK')}
 """.strip()
     print(metadata)
