@@ -1,6 +1,8 @@
 """ This module will contain util functions
 that will be used in the program"""
 from pathlib import Path
+import datetime
+from library.music import Music
 
 
 def list_songs(folders: list) -> None:
@@ -16,3 +18,17 @@ def list_songs(folders: list) -> None:
             mp3_total_files.extend([str(mp3) for mp3 in mp3_files])
     for idx, mp3 in enumerate(mp3_total_files):
         print(idx, mp3)
+
+
+def show_metadata(music: Music) -> None:
+    """Prints a representation of a music metadata."""
+    meta = music.metadata
+    length = datetime.timedelta(seconds=int(meta.info.length))
+    metadata = f"""
+TITLE:  {meta.get('TIT2')}
+ARTIST: {meta.get('TPE1')}
+LENGTH: {length}
+ALBUM:  {meta.get('TALB')}
+TRACK:  {meta.get('TRCK')}
+""".strip()
+    print(metadata)
