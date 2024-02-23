@@ -1,3 +1,4 @@
+from pathlib import Path
 from pygame import mixer
 from mutagen import _util, _file
 
@@ -6,7 +7,7 @@ class Music(mixer.Sound):
     channel: mixer.Channel
     metadata: _file.FileType
 
-    def __init__(self, file: str) -> None:
+    def __init__(self, file: str | Path) -> None:
         super().__init__(file)
 
         try:
@@ -17,7 +18,10 @@ class Music(mixer.Sound):
         except _util.MutagenError:
             # TODO
             ...
-        self.path = file
+        if file is Path:
+            self.filename = file.name
+        else:
+            self.filename = file
 
     def play(self) -> None:
         """Should set channel"""
