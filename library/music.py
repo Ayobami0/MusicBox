@@ -18,7 +18,10 @@ class Music(mixer.Sound):
         except _util.MutagenError:
             # TODO
             ...
-        self.path = file
+        if file is Path:
+            self.filename = file.name
+        else:
+            self.filename = file
 
     def play(self) -> None:
         """Should set channel"""
