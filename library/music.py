@@ -6,13 +6,13 @@ mixer.init()  # This would be removed. It should be called in console.
 
 class Music(mixer.Sound):
     channel: mixer.Channel
-    info: _file.FileType | None
+    metadata: _file.FileType | None
 
     def __init__(self, file: str) -> None:
         super().__init__(file)
 
         try:
-            self.info = _file.File(file)
+            self.metadata = _file.File(file)
         except _util.MutagenError:
             # TODO
             ...
@@ -20,5 +20,7 @@ class Music(mixer.Sound):
     def play(self) -> None:
         """Should set channel"""
 
-
-print(Music('Over_the_Horizon.mp3').info)
+# Test: TO BE REMOVED
+# with open('test', 'w+') as fp:
+#     for k, v in Music('Over_the_Horizon.mp3').metadata.items():
+#         print(k, str(v), file=fp)
