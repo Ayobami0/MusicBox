@@ -22,6 +22,3 @@ class Music(mixer.Sound):
             self.filename = file.name
         else:
             self.filename = file
-
-    def play(self) -> None:
-        """Should set channel"""
