@@ -11,7 +11,7 @@ mixer.init()
 class MusicPlayer(cmd.Cmd):
     # channel = mixer.find_channel()
 
-    def do_play_test(self, fp):
+    def do_play(self, fp):
         try:
             if fp != "":
                 song: mixer.Sound = Music(fp)
@@ -32,7 +32,6 @@ class MusicPlayer(cmd.Cmd):
             song2: mixer.Sound = Music("./jingles/jingle-bells-rock.mp3")
             song3: mixer.Sound = Music("./Over_the_Horizon.mp3")
             MusicQueue.add(song1, song2, song3)
-            print(MusicQueue.list())
             return
         except Exception as e:
             print("[ERROR] ", e)

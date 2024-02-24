@@ -1,5 +1,8 @@
 from pygame.mixer import Channel
+
+from utils import exec
 from library.music import Music
+from shared import Cmd
 
 
 class MusicQueue:
@@ -21,7 +24,9 @@ class MusicQueue:
         if cls.__current + 1 >= cls.__count:
             raise Exception("Last Song In Queue")
         cls.__current += 1
-        channel.play(cls.__queue[cls.__current])
+
+        exec(Cmd.NEXT)
+        # channel.play(cls.__queue[cls.__current])
 
     @classmethod
     def prev(cls, channel: Channel) -> None:
@@ -30,8 +35,10 @@ class MusicQueue:
         if cls.__current - 1 < 0:
             raise Exception("First Song In Queue")
         cls.__current -= 1
-        music = cls.__queue[cls.__current]
-        channel.play(music)
+
+        exec(Cmd.NEXT)
+        # music = cls.__queue[cls.__current]
+        # channel.play(music)
 
     @classmethod
     def list(cls) -> list:
@@ -46,5 +53,7 @@ class MusicQueue:
     @classmethod
     def play(cls, channel: Channel) -> None:
         if cls.__count == 0:
-            raise Exception('No Songs in queue')
-        channel.play(cls.__queue[cls.__current])
+            raise Exception("No Songs in queue")
+        exec(Cmd.PLAY, *[m.filename for m in cls.__queue])
+        # channel.play(cls.__queue[cls.__current])
+        # channel.set_endevent(pygame.USEREVENT + 1)

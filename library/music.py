@@ -4,7 +4,6 @@ from mutagen import _util, _file
 
 
 class Music(mixer.Sound):
-    channel: mixer.Channel
     metadata: _file.FileType
 
     def __init__(self, file: str | Path) -> None:
