@@ -36,10 +36,11 @@ LENGTH : {length}
 ALBUM  : {meta.get('TALB')}
 TRACK  : {meta.get('TRCK')}
 """.strip()
-    print(metadata)
+    print(metadata, flush=True)
 
 
 def exec(command: Cmd, *args: Path | str):
+    """Run script as a child process."""
     if Config._script_proc is not None:
         Config._script_proc.kill()
     cmd = [sys.executable, "_music_script.py", f"{command.value}", *args]

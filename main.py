@@ -1,36 +1,39 @@
-from pygame import mixer
+import os
+import pygame
+import cmd
 from library.config import Config
 from library.queue import MusicQueue
 from utils import list_songs
 from library.music import Music
-import cmd
 
-mixer.init()
+# We need this to stop that annoying popup from pygame.
+# We would have to shift the console to a different file and call it from
+# there.
+# So we can set the env var globally. Currently it only affects the script.
+os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
+
+pygame.mixer.init()
 
 
 class MusicPlayer(cmd.Cmd):
-    channel = mixer.find_channel()
-
     def do_play(self, fp):
         try:
             if fp != "":
-                song: mixer.Sound = Music(fp)
+                song: pygame.mixer.Sound = Music(fp)
                 MusicQueue.add(song)
                 MusicQueue.play()
                 print("[PLAYING]", fp)
-
             MusicQueue.play()
             print("[PLAYING] Queue")
-            return
         except Exception as e:
             print("[ERROR] ", e)
             pass
 
     def do_queue(self, _):
         try:
-            song1: mixer.Sound = Music("./jingles/jingle-bells.mp3")
-            song2: mixer.Sound = Music("./jingles/jingle-bells-rock.mp3")
-            song3: mixer.Sound = Music("./Over_the_Horizon.mp3")
+            song1: pygame.mixer.Sound = Music("./jingles/jingle-bells.mp3")
+            song2: pygame.mixer.Sound = Music("./jingles/jingle-bells-rock.mp3")
+            song3: pygame.mixer.Sound = Music("./Over_the_Horizon.mp3")
             MusicQueue.add(song1, song2, song3)
             return
         except Exception as e:
@@ -39,8 +42,8 @@ class MusicPlayer(cmd.Cmd):
 
     def do_next(self, _):
         try:
-            channel.stop()
             MusicQueue.next()
+            print(MusicQueue.show())
         except Exception as e:
             print("[ERROR] ", e)
             pass
@@ -49,8 +52,8 @@ class MusicPlayer(cmd.Cmd):
         """Function to go to the
         previous song on the queue"""
         try:
-            channel.stop()
             MusicQueue.prev()
+            print(MusicQueue.show())
         except Exception as e:
             print("[ERROR]", e)
 
@@ -68,6 +71,5 @@ class MusicPlayer(cmd.Cmd):
 if __name__ == "__main__":
     Config.load()
     Config.include_dir("library", "jingles", ".")
-    channel = mixer.find_channel()
 
     MusicPlayer().cmdloop()

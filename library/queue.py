@@ -40,6 +40,18 @@ class MusicQueue:
         return cls.__queue
 
     @classmethod
+    def show(cls):
+        """ Returns a string showing the position of the song queue."""
+        return "\n".join(
+            [
+                # displays an arrow after the song to show the position
+                # on the queue
+                f'{m.filename}{" <" if i == cls.__current else ""}'
+                for i, m in enumerate(cls.__queue)
+            ],
+        )
+
+    @classmethod
     def clear(cls):
         cls.__queue.clear()
         cls.__current = -1
