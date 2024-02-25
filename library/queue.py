@@ -56,4 +56,8 @@ class MusicQueue:
             raise Exception("No Songs in queue")
         exec(Cmd.PLAY, *[m.filename for m in cls.__queue[cls.__current:]])
         # channel.play(cls.__queue[cls.__current])
-        # channel.set_endevent(pygame.USEREVENT + 1)
+        # channel.set_endevent(pygame.USEREVENT + 1
+    
+    @classmethod
+    def pause(cls, channel: Channel) -> None:
+        ...

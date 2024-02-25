@@ -44,6 +44,15 @@ class MusicPlayer(cmd.Cmd):
         except Exception as e:
             print("[ERROR] ", e)
             pass
+    
+    def do_prev(self, _):
+        """Function to go to the
+        previous song on the queue"""
+        try:
+            channel.stop()
+            MusicQueue.prev(channel)
+        except Exception as e:
+            print("[ERROR]", e)
 
     def do_list(self, line):
         if line == "":
@@ -51,6 +60,9 @@ class MusicPlayer(cmd.Cmd):
             return
         if line == "queue":
             print([s.filename for s in MusicQueue.list()])
+
+    def emptyline(self) -> None:
+        pass
 
 
 if __name__ == "__main__":
