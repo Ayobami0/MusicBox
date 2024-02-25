@@ -3,11 +3,14 @@ that will be used in the program"""
 from pathlib import Path
 import glob
 import datetime
-import subprocess
+from library.music import Music
+from subprocess import Popen
 import sys
 
+from shared import Cmd
 
-def list_songs(folders: list) -> list[str|None]:
+
+def list_songs(folders: list) -> list:
     """Function to accepts list
     of directories to check for songs
     and list them out"""
@@ -21,7 +24,7 @@ def list_songs(folders: list) -> list[str|None]:
             mp3_total_files.extend([str(mp3) for mp3 in mp3_files])
     for idx, mp3 in enumerate(mp3_total_files):
         print(idx, mp3)
-    return(mp3_total_files)
+    return mp3_total_files
 
 def show_metadata(music) -> None:
     from library.music import Music
@@ -29,14 +32,16 @@ def show_metadata(music) -> None:
     meta = music.metadata
     length = datetime.timedelta(seconds=int(meta.info.length))
     metadata = f"""
-TITLE:  {meta.get('TIT2')}
-ARTIST: {meta.get('TPE1')}
-LENGTH: {length}
-ALBUM:  {meta.get('TALB')}
-TRACK:  {meta.get('TRCK')}
+{music.filename}
+TITLE  : {meta.get('TIT2')}
+ARTIST : {meta.get('TPE1')}
+LENGTH : {length}
+ALBUM  : {meta.get('TALB')}
+TRACK  : {meta.get('TRCK')}
 """.strip()
     print(metadata)
 
-def exec(command, *args: Path | str):
-    cmd = [sys.executable, '_music_script.py', f'{command}', *args]
-    subprocess.Popen(cmd)
+
+def exec(command: Cmd, *args: Path | str):
+    cmd = [sys.executable, "_music_script.py", f"{command}", *args]
+    Popen(cmd)

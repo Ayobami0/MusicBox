@@ -2,15 +2,26 @@ import sys
 
 from shared import Cmd
 from pygame.mixer import music, init
-from subprocess import Popen
 
 argv = sys.argv
-# cmd = Cmd(sys.argv[1])
+cmd = Cmd(argv[1])
+idx = int(argv[2])
 
 init()
 
+
+def next():
+    if music.get_busy():
+        music.stop()
+
+
+def stop():
+    if music.get_busy():
+        music.stop()
+
+
 def play(now_playin: int = 0):
-    opts = argv[2:]
+    opts = argv[3:]
 
     if now_playin >= len(opts):
         return
@@ -22,5 +33,14 @@ def play(now_playin: int = 0):
         pass
     play(now_playin + 1)
 
-if Cmd.PLAY == "play":
-    play()
+
+if cmd == Cmd.PLAY:
+    play(idx)
+elif cmd == Cmd.NEXT:
+    next()
+elif cmd == Cmd.PREV:
+    ...
+elif cmd == Cmd.STOP:
+    ...
+elif cmd == Cmd.PAUSE:
+    ...

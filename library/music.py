@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import pygame
+=======
+from pathlib import Path
+>>>>>>> bdbfe5883abf2f0cdb6cf921fde7bbd726d56eb0
 from pygame import mixer
 from mutagen import _util, _file
 from pathlib import Path
@@ -10,14 +14,11 @@ from utils import exec
 
 
 class Music(mixer.Sound):
-    mixer.init()
-    __channel: mixer.Channel = mixer.find_channel(force=True)
-    __playlist: list = []
     metadata: _file.FileType
     __queue = Path("jingles").iterdir() #To be replaced.
     __count = 2
 
-    def __init__(self, file: str) -> None:
+    def __init__(self, file: str | Path) -> None:
         super().__init__(file)
 
         try:
@@ -28,24 +29,7 @@ class Music(mixer.Sound):
         except _util.MutagenError:
             # TODO
             ...
-        self.path = file
-    
-    @classmethod
-    def play(cls) -> None:
-        if cls.__count == 0:
-            raise Exception('No Songs in queue')
-        exec(Cmd.PLAY, *[str(m) for m in cls.__queue])
-
-    # def play(self, song_list: list[Path] | None) -> mixer.Channel:
-    #     """Should set and return channel"""
-    #     if song_list is None:
-    #         return
-    #     sound = mixer.Sound(song_list[0])
-    #     self.__channel.play(sound)
-    #     print("I should be playing")
-    #     SOUND_END = pygame.USEREVENT + 1
-    #     self.__channel.set_endevent(SOUND_END)
-    #     # song_list.pop()
-    #     # if len(song_list) > 0:
-    #     #     self.__channel.queue(mixer.Sound(song_list.pop()))
-    #     return (self.__channel, SOUND_END, song_list)
+        if file is Path:
+            self.filename = file.name
+        else:
+            self.filename = file
