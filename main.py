@@ -16,10 +16,10 @@ class MusicPlayer(cmd.Cmd):
             if fp != "":
                 song: mixer.Sound = Music(fp)
                 MusicQueue.add(song)
-                MusicQueue.play(channel)
+                MusicQueue.play()
                 print("[PLAYING]", fp)
 
-            MusicQueue.play(channel)
+            MusicQueue.play()
             print("[PLAYING] Queue")
             return
         except Exception as e:
@@ -40,17 +40,17 @@ class MusicPlayer(cmd.Cmd):
     def do_next(self, _):
         try:
             channel.stop()
-            MusicQueue.next(channel)
+            MusicQueue.next()
         except Exception as e:
             print("[ERROR] ", e)
             pass
-    
+
     def do_prev(self, _):
         """Function to go to the
         previous song on the queue"""
         try:
             channel.stop()
-            MusicQueue.prev(channel)
+            MusicQueue.prev()
         except Exception as e:
             print("[ERROR]", e)
 

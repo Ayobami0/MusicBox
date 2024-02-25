@@ -37,4 +37,4 @@ class Config:
     @classmethod
     def list_dir(cls) -> list[Path]:
         """List supported directory to search for songs."""
-        return [dir for dir in cls.__PRESET_DIRS]
+        return list(cls.__PRESET_DIRS)
