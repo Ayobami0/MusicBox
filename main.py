@@ -9,7 +9,7 @@ mixer.init()
 
 
 class MusicPlayer(cmd.Cmd):
-    # channel = mixer.find_channel()
+    channel = mixer.find_channel()
 
     def do_play(self, fp):
         try:

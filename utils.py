@@ -6,7 +6,6 @@ import datetime
 from library.music import Music
 from subprocess import Popen
 import sys
-
 from shared import Cmd
 
 
@@ -43,5 +42,5 @@ TRACK  : {meta.get('TRCK')}
 
 
 def exec(command: Cmd, *args: Path | str):
-    cmd = [sys.executable, "_music_script.py", f"{command}", *args]
+    cmd = [sys.executable, "_music_script.py", f"{command.value}", *args]
     Popen(cmd)

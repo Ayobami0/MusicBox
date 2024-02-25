@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-import pygame
-=======
 from pathlib import Path
->>>>>>> bdbfe5883abf2f0cdb6cf921fde7bbd726d56eb0
 from pygame import mixer
 from mutagen import _util, _file
 from pathlib import Path
@@ -10,7 +6,7 @@ from shared import Cmd
 import subprocess
 import sys
 import os
-from utils import exec
+# from utils import exec
 
 
 class Music(mixer.Sound):
