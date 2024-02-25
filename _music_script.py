@@ -5,7 +5,6 @@ from pygame.mixer import music, init
 
 argv = sys.argv
 cmd = Cmd(argv[1])
-idx = int(argv[2])
 
 init()
 
@@ -35,7 +34,7 @@ def play(now_playin: int = 0):
 
 
 if cmd == Cmd.PLAY:
-    play(idx)
+    play()
 elif cmd == Cmd.NEXT:
     next()
 elif cmd == Cmd.PREV:

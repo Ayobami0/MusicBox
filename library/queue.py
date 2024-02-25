@@ -25,7 +25,7 @@ class MusicQueue:
             raise Exception("Last Song In Queue")
         cls.__current += 1
 
-        exec(Cmd.NEXT)
+        cls.play(channel)
         # channel.play(cls.__queue[cls.__current])
 
     @classmethod
@@ -36,7 +36,7 @@ class MusicQueue:
             raise Exception("First Song In Queue")
         cls.__current -= 1
 
-        exec(Cmd.NEXT)
+        cls.play(channel)
         # music = cls.__queue[cls.__current]
         # channel.play(music)
 
@@ -54,6 +54,6 @@ class MusicQueue:
     def play(cls, channel: Channel) -> None:
         if cls.__count == 0:
             raise Exception("No Songs in queue")
-        exec(Cmd.PLAY, *[m.filename for m in cls.__queue])
+        exec(Cmd.PLAY, *[m.filename for m in cls.__queue[cls.__current:]])
         # channel.play(cls.__queue[cls.__current])
         # channel.set_endevent(pygame.USEREVENT + 1)
