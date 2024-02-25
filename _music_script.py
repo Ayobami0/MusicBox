@@ -5,7 +5,6 @@ from pygame.mixer import music, init
 
 argv = sys.argv
 cmd = Cmd(argv[1])
-# idx = int(argv[2])
 
 init()
 

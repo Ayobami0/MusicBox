@@ -47,15 +47,15 @@ class MusicPlayer(cmd.Cmd):
 
     def do_list(self, line):
         if line == "":
-            list_songs(config.list_dir())
+            list_songs(Config.list_dir())
             return
         if line == "queue":
             print([s.filename for s in MusicQueue.list()])
 
 
 if __name__ == "__main__":
-    config = Config()
-    config.include_dir("library", "jingles", ".")
+    Config.load()
+    Config.include_dir("library", "jingles", ".")
     channel = mixer.find_channel()
 
     MusicPlayer().cmdloop()
