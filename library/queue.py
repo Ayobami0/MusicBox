@@ -61,6 +61,10 @@ class MusicQueue:
         return cls.__queue
 
     @classmethod
+    def get_current(cls) -> Path:
+        return cls.__queue[cls.__current]
+
+    @classmethod
     def show(cls):
         """Returns a string showing the position of the song queue."""
         return "\n".join(
