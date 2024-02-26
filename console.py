@@ -10,12 +10,11 @@ pygame.mixer.init()
 
 class MusicPlayer(cmd.Cmd):
     def do_play(self, line):
-        """Play songs in queue, a single song, series of songs or songs
-        in a directory.
-        Starts from top of queue or last played song if next or prev is used.
+        """Play songs in queue, a single song, series of songs or songs in a directory.
+        \rStarts from top of queue or last played song if next or prev is used.
 
-        Usage:
-            play [filename ... | directory]"""
+        \rUsage:
+            \r\tplay [filename ... | directory]"""
         try:
             if line == "":
                 MusicQueue.play()
@@ -36,11 +35,10 @@ class MusicPlayer(cmd.Cmd):
             pass
 
     def do_queue(self, line: str):
-        """Add songs to the main playing queue from a directory,
-        a list of songs.
+        """Add songs to the main playing queue from a directory, a list of songs.
 
-        Usage:
-            queue [filename ... | directory]"""
+        \rUsage:
+            \r\tqueue [filename ... | directory]"""
         try:
             if line == "":
                 MusicQueue.add(*[s for s in Config.list_songs()])
@@ -61,8 +59,8 @@ class MusicPlayer(cmd.Cmd):
     def do_next(self, line):
         """Shift to next song in the main queue.
 
-        Usage:
-            next"""
+        \rUsage:
+            \r\tnext"""
         try:
             if line != "":
                 print(self.do_next.__doc__)
@@ -76,8 +74,8 @@ class MusicPlayer(cmd.Cmd):
     def do_prev(self, line):
         """Shift to previous song in the main queue.
 
-        Usage:
-            prev"""
+        \rUsage:
+            \r\tprev"""
         try:
             if line != "":
                 print(self.do_prev.__doc__)
@@ -90,12 +88,12 @@ class MusicPlayer(cmd.Cmd):
     def do_list(self, line):
         """List songs.
 
-        Usage:
-            list
-            list queue
+        \rUsage:
+            \r\tlist
+            \r\tlist queue
 
-        Options:
-            queue   Show only queued songs"""
+        \rOptions:
+            \r\tqueue   Show only queued songs"""
         if line == "":
             list_songs(Config.list_dir())
             return
@@ -107,8 +105,8 @@ class MusicPlayer(cmd.Cmd):
     def do_pause(self, line):
         """Pause the current playing song in the main queue.
 
-        Usage:
-            pause"""
+        \rUsage:
+            \r\tpause"""
         try:
             if line == "":
                 MusicQueue.pause()
@@ -121,8 +119,8 @@ class MusicPlayer(cmd.Cmd):
     def do_resume(self, line):
         """Resume playback of the paused song in the main queue.
 
-        Usage:
-            resume"""
+        \rUsage:
+            \r\tresume"""
         try:
             if line == "":
                 MusicQueue.resume()
@@ -134,37 +132,36 @@ class MusicPlayer(cmd.Cmd):
     def do_info(self, line):
         """Check the info of a music file, or the currently playing song.
 
-        Usage:
-            info <filename> | playing | queue <song-number>
+        \rUsage:
+            \r\tinfo <filename> | queue <song-number | playing>
 
-        Options:
-            playing                 Shows the info of the currently playing
-                                    song.
-            queue <song-number>     Shows the info of a song in queue by it's
-                                    index."""
+        \rOptions:
+            \r\tqueue playing           Shows the info of the currently playing song.
+            \r\tqueue <song-number>     Shows the info of a song in queue by it's index."""
         try:
             if line == "" or len(line.split()) > 2:
                 print(self.do_info.__doc__)
                 return
             cmd = line.split()
-            if cmd[0] == "playing":
-                if len(cmd) == 2:
+            if cmd[0] == "queue":
+                if len(cmd) < 2:
                     print(self.do_info.__doc__)
                     return
                 try:
-                    show_metadata(MusicQueue.get_current())
-                except IndexError:
-                    raise Exception("No song is currently playing")
-            elif cmd[0] == "queue":
-                try:
-                    song = MusicQueue.list()[int(cmd[1])]
-                    show_metadata(song)
+                    if cmd[1] == "playing":
+                        try:
+                            show_metadata(MusicQueue.get_current())
+                        except IndexError:
+                            raise Exception("No song is currently playing")
+                    else:
+                        song = MusicQueue.list()[int(cmd[1])]
+                        show_metadata(song)
                 except IndexError:
                     raise Exception(f"{cmd[1]} is not part of the queue.")
-                except Exception as e:
-                    raise e
-            else:
+            elif cmd[0] == '':
                 show_metadata(Path(cmd[0]))
+            else:
+                print(self.do_info.__doc__)
 
         except Exception as e:
             print("[ERROR]", e)

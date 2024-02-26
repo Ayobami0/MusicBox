@@ -15,7 +15,7 @@ class MusicQueue:
         for s in songs:
             if not s.exists():
                 raise Exception(f'File {s.name} does not exists')
-            if s.is_dir:
+            if not s.is_file:
                 raise Exception(f'File {s.name} is a directory')
         if cls.__count == 0:
             cls.__current = 0

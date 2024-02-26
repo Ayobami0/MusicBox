@@ -36,12 +36,14 @@ def show_metadata(song: Path) -> None:
         raise Exception(f'{song} is not a valid song file')
     length = datetime.timedelta(seconds=int(meta.info.length))
     metadata = f"""
+===============================
 {song}
 TITLE  : {meta.get('TIT2')}
 ARTIST : {meta.get('TPE1')}
 LENGTH : {length}
 ALBUM  : {meta.get('TALB')}
 TRACK  : {meta.get('TRCK')}
+===============================
 """.strip()
     print(metadata, flush=True)
 
