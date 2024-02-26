@@ -1,5 +1,3 @@
-from pygame.mixer import Channel
-
 from utils import exec
 from library.music import Music
 from shared import Cmd
@@ -18,9 +16,9 @@ class MusicQueue:
             cls.__current = 0
         cls.__count += len(songs)
         cls.__queue.extend(songs)
-
+        
     @classmethod
-    def next(cls, channel: Channel) -> None:
+    def next(cls) -> None: 
         from library.config import Config
         if cls.__count == 0:
             raise Exception("No Songs in Queue")
@@ -28,16 +26,16 @@ class MusicQueue:
         if Config._script_proc:
             with open("pause_time", "r") as f:
                 r = f.read()
+                print("Here", r.split())
                 cls.__current += int(r.split()[1])
         #----------------------------------------->
         if cls.__current + 1 >= cls.__count:
             raise Exception("Last Song In Queue")
         cls.__current += 1
-        cls.play(channel)
-        # channel.play(cls.__queue[cls.__current])
+        cls.play()
 
     @classmethod
-    def prev(cls, channel: Channel) -> None:
+    def prev(cls) -> None:
         from library.config import Config
         if cls.__count == 0:
             raise Exception("No Songs in Queue")
@@ -51,13 +49,23 @@ class MusicQueue:
             raise Exception("First Song In Queue")
         cls.__current -= 1
 
-        cls.play(channel)
-        # music = cls.__queue[cls.__current]
-        # channel.play(music)
+        cls.play()
 
     @classmethod
     def list(cls) -> list:
         return cls.__queue
+
+    @classmethod
+    def show(cls):
+        """ Returns a string showing the position of the song queue."""
+        return "\n".join(
+            [
+                # displays an arrow after the song to show the position
+                # on the queue
+                f'{m.filename}{" <" if i == cls.__current else ""}'
+                for i, m in enumerate(cls.__queue)
+            ],
+        )
 
     @classmethod
     def clear(cls):
@@ -66,13 +74,13 @@ class MusicQueue:
         cls.__count = 0
 
     @classmethod
-    def play(cls, channel: Channel) -> None:
+    def play(cls) -> None:
         if cls.__count == 0:
             raise Exception("No Songs in queue")
         exec(Cmd.PLAY, 0, *[m.filename for m in cls.__queue[cls.__current:]])
     
     @classmethod
-    def pause(cls, channel: Channel) -> None:
+    def pause(cls) -> None:
         from library.config import Config
         from signal import SIGTERM
         cls.__pause_status = True
@@ -85,7 +93,7 @@ class MusicQueue:
                 cls.__pause_time = int(r.split()[0])
     
     @classmethod
-    def resume(cls, channel: Channel) -> None:
+    def resume(cls) -> None:
         if cls.__pause_status:
             # print("Here")
             with open("pause_time", "r") as f:

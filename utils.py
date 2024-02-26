@@ -1,11 +1,12 @@
 """ This module will contain util functions
 that will be used in the program"""
 from pathlib import Path
-import glob
 import datetime
+
 from library.config import Config #Init should be in an init file
 from library.music import Music
 from subprocess import Popen, PIPE
+
 import sys
 from shared import Cmd
 
@@ -20,14 +21,13 @@ def list_songs(folders: list) -> list:
         folder_path = Path(folder)
         if folder_path.exists() and folder_path.is_dir():
             mp3_files = folder_path.glob("*.mp3")
-            # mp3_files = glob.glob(str(folder_path / ".{mp3, wav}"))
             mp3_total_files.extend([str(mp3) for mp3 in mp3_files])
     for idx, mp3 in enumerate(mp3_total_files):
         print(idx, mp3)
     return mp3_total_files
 
+
 def show_metadata(music) -> None:
-    from library.music import Music
     """Prints a representation of a music metadata."""
     meta = music.metadata
     length = datetime.timedelta(seconds=int(meta.info.length))
@@ -39,7 +39,7 @@ LENGTH : {length}
 ALBUM  : {meta.get('TALB')}
 TRACK  : {meta.get('TRCK')}
 """.strip()
-    print(metadata)
+    print(metadata, flush=True)
 
 
 def exec(command: Cmd, pos: int, *args: Path | str):
