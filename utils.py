@@ -4,7 +4,7 @@ from pathlib import Path
 import datetime
 from mutagen import _file
 
-from library.config import Config #Init should be in an init file
+from library.config import Config
 from subprocess import Popen, PIPE
 
 import sys

@@ -98,7 +98,8 @@ class MusicPlayer(cmd.Cmd):
             list_songs(Config.list_dir())
             return
         elif line == "queue":
-            print([s.filename for s in MusicQueue.list()])
+            for i, s in enumerate(MusicQueue.list()):
+                print(i, s)
         else:
             print(self.do_list.__doc__)
 
