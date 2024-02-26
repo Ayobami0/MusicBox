@@ -8,6 +8,7 @@ from subprocess import Popen
 class Config:
     __PRESET_DIRS: set[Path] = set()
     __DEFAULT_PATH = Path("jingles")
+    _surfix_glob = ''
     _script_proc: Popen | None = None
 
     @classmethod
@@ -38,3 +39,12 @@ class Config:
     def list_dir(cls) -> list[Path]:
         """List supported directory to search for songs."""
         return list(cls.__PRESET_DIRS)
+
+    @classmethod
+    def list_songs(cls) -> list[Path]:
+        """List all songs in preset dir."""
+        songs = set()
+
+        for d in cls.__PRESET_DIRS:
+            songs.update(d.glob('*.mp3'))
+        return [s for s in songs]

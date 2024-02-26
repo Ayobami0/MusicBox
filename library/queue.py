@@ -1,17 +1,22 @@
+from pathlib import Path
 from utils import exec
-from library.music import Music
 from shared import Cmd
 from library.config import Config
 
 
 class MusicQueue:
-    __queue: list[Music] = []
+    __queue: list[Path] = []
     __current: int = -1
     __count: int = 0
     __pause_status = False
 
     @classmethod
-    def add(cls, *songs: Music):
+    def add(cls, *songs: Path):
+        for s in songs:
+            if not s.exists():
+                raise Exception(f'File {s.name} does not exists')
+            if s.is_dir:
+                raise Exception(f'File {s.name} is a directory')
         if cls.__count == 0:
             cls.__current = 0
         cls.__count += len(songs)
@@ -21,14 +26,14 @@ class MusicQueue:
     def next(cls) -> None:
         if cls.__count == 0:
             raise Exception("No Songs in Queue")
+        if cls.__current + 1 >= cls.__count:
+            raise Exception("Last Song In Queue")
         try:
             if Config._script_proc:
                 with open("pause_time", "r") as f:
                     r = f.read()
                     print("Here", r.split())
                     cls.__current += int(r.split()[1])
-            if cls.__current + 1 >= cls.__count:
-                raise Exception("Last Song In Queue")
             cls.__current += 1
             cls.play()
         except IndexError:
@@ -38,13 +43,13 @@ class MusicQueue:
     def prev(cls) -> None:
         if cls.__count == 0:
             raise Exception("No Songs in Queue")
+        if cls.__current - 1 < 0:
+            raise Exception("First Song In Queue")
         try:
             if Config._script_proc:
                 with open("pause_time", "r") as f:
                     r = f.read()
                     cls.__current += int(r.split()[1])
-            if cls.__current - 1 < 0:
-                raise Exception("First Song In Queue")
             cls.__current -= 1
 
             cls.play()
@@ -60,8 +65,8 @@ class MusicQueue:
         """Returns a string showing the position of the song queue."""
         return "\n".join(
             [
-                f'{m.filename}{" <" if i == cls.__current else ""}'
-                for i, m in enumerate(cls.__queue)
+                f'{p.name}{" <" if i == cls.__current else ""}'
+                for i, p in enumerate(cls.__queue)
             ],
         )
 
@@ -75,7 +80,10 @@ class MusicQueue:
     def play(cls) -> None:
         if cls.__count == 0:
             raise Exception("No Songs in queue")
-        exec(Cmd.PLAY, 0, *[m.filename for m in cls.__queue[cls.__current :]])
+        cls.play_one_or_more(
+            *[p for p in cls.__queue[cls.__current:]],
+            start_pos=0
+        )
 
     @classmethod
     def pause(cls) -> None:
@@ -92,10 +100,16 @@ class MusicQueue:
     @classmethod
     def resume(cls) -> None:
         if cls.__pause_status:
-            exec(
-                Cmd.PLAY,
-                cls.__pause_time,
-                *[m.filename for m in cls.__queue[cls.__current :]],
+            cls.play_one_or_more(
+                *[p for p in cls.__queue[cls.__current:]],
+                start_pos=cls.__pause_time
             )
             cls.__pause_status = False
             cls.__pause_time = 0
+
+    @staticmethod
+    def play_one_or_more(*paths, start_pos=0):
+        """
+        A static helper method that provides an
+        interface to the exec function"""
+        exec(Cmd.PLAY, start_pos, *paths)
