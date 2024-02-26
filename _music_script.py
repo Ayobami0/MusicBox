@@ -5,7 +5,8 @@ import os
 from shared import Cmd, CMD_PROMPT
 import pygame
 from datetime import datetime
-# from signal import signal, SIGTERM
+
+import signal
 
 argv = sys.argv
 cmd = Cmd(argv[1])
@@ -24,23 +25,23 @@ def play(now_playin: int = 0):
     # Show the currently playing song.
     # \r clears the current line.
     print("\r[NOW PLAYING]", opts[now_playin])
+    # pygame.mixer.music.play()
     pygame.mixer.music.play()
-    pygame.mixer.music.set_pos((pos / 1000))
+    pygame.mixer.music.set_pos((pos / 750))
 
     # To fix that issue with command prompt not coming up after play's
     # execution.
     # os.write(0, bytes(CMD_PROMPT, encoding='utf-8'))
     while pygame.mixer.music.get_busy():
-        current_pos = pygame.mixer.music.get_pos()
-        print(current_pos, end="\r")
+        current_pos = pygame.mixer.music.get_pos() + pos
+        # print(current_pos, end="\r")
         with open("pause_time", "w") as f:
             f.write(f"{current_pos} {now_playin}")
-            f.flush()
-            os.fsync(f.fileno())
-        # current_playing = now_playin
+            # f.flush()
+            # os.fsync(f.fileno())
+        current_playing = now_playin
         pass
     play(now_playin + 1)
-
 
 # def __signal_handler(_, __):
 #     """Function to react to stop/
@@ -51,6 +52,7 @@ def play(now_playin: int = 0):
 #         exit(0)
 
 # signal(SIGTERM, __signal_handler)
+
 
 if cmd == Cmd.PLAY:
     play()

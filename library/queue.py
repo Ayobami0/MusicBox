@@ -8,7 +8,7 @@ class MusicQueue:
     __current: int = -1
     __count: int = 0
     __pause_status = False
-    __pause_time = 0
+    ## __pause_time = 0
 
     @classmethod
     def add(cls, *songs: Music):
@@ -82,10 +82,10 @@ class MusicQueue:
     @classmethod
     def pause(cls) -> None:
         from library.config import Config
-        from signal import SIGTERM
+        import signal
+
         cls.__pause_status = True
         if Config._script_proc:
-            Config._script_proc.send_signal(SIGTERM)
             try:
                 with open("pause_time", "r") as f:
                     r = f.read()
@@ -93,12 +93,14 @@ class MusicQueue:
                     cls.__pause_time = int(r.split()[0])
             except IndexError:
                 cls.pause()
-            # Config._script_proc.kill()
+            Config._script_proc.kill()
     
     @classmethod
     def resume(cls) -> None:
         if cls.__pause_status:
-            # print("Here")
+            from library.config import Config
+            import signal
+            print("Here")
             with open("pause_time", "r") as f:
                 r = f.read()
             exec(
@@ -106,5 +108,6 @@ class MusicQueue:
                 cls.__pause_time,
                 *[m.filename for m in cls.__queue[cls.__current:]]
                 )
+            print(Config._script_proc.args)
             cls.__pause_status = False
             cls.__pause_time = 0
