@@ -11,8 +11,8 @@ import os
 
 class Music(mixer.Sound):
     metadata: _file.FileType
-    __queue = Path("jingles").iterdir() #To be replaced.
-    __count = 2
+    # __queue = Path("jingles").iterdir() #To be replaced.
+    # __count = 2
 
     def __init__(self, file: str | Path) -> None:
         super().__init__(file)

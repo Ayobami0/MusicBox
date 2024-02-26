@@ -3,9 +3,9 @@ that will be used in the program"""
 from pathlib import Path
 import glob
 import datetime
-from library.config import Config
+from library.config import Config #Init should be in an init file
 from library.music import Music
-from subprocess import Popen
+from subprocess import Popen, PIPE
 import sys
 from shared import Cmd
 
@@ -42,9 +42,12 @@ TRACK  : {meta.get('TRCK')}
     print(metadata)
 
 
-def exec(command: Cmd, *args: Path | str):
+def exec(command: Cmd, pos: int, *args: Path | str):
     if Config._script_proc is not None:
         Config._script_proc.kill()
-    cmd = [sys.executable, "_music_script.py", f"{command.value}", *args]
-    p = Popen(cmd)
+    cmd = [
+        sys.executable, "_music_script.py",
+        f"{command.value}", f"{pos}", *args
+        ]
+    p = Popen(cmd, stdout=PIPE)
     Config._script_proc = p

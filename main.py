@@ -60,6 +60,16 @@ class MusicPlayer(cmd.Cmd):
             return
         if line == "queue":
             print([s.filename for s in MusicQueue.list()])
+    
+    def do_pause(self, _):
+        """Function to pause sound"""
+        MusicQueue.pause(channel)
+        # channel.pause()
+    
+    def do_resume(self, _):
+        """Function to resume a
+        playing sound"""
+        MusicQueue.resume(channel)
 
     def emptyline(self) -> None:
         pass
