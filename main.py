@@ -34,6 +34,7 @@ class MusicPlayer(cmd.Cmd):
             song1: pygame.mixer.Sound = Music("./jingles/jingle-bells.mp3")
             song2: pygame.mixer.Sound = Music("./jingles/jingle-bells-rock.mp3")
             song3: pygame.mixer.Sound = Music("./Over_the_Horizon.mp3")
+            song4: pygame.mixer.Sound = Music("./jingles/Ayo-by-IF-E.mp3")
             MusicQueue.add(song1, song2, song3)
             return
         except Exception as e:

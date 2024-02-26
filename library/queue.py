@@ -23,7 +23,7 @@ class MusicQueue:
         if cls.__count == 0:
             raise Exception("No Songs in Queue")
         ### Update the __current from runnig file from script.
-        if Config._script_proc:
+        if Config._script_proc:    
             with open("pause_time", "r") as f:
                 r = f.read()
                 print("Here", r.split())
@@ -85,12 +85,15 @@ class MusicQueue:
         from signal import SIGTERM
         cls.__pause_status = True
         if Config._script_proc:
-            # Config._script_proc.kill()
-            Config._script_proc.send_signal(SIGTERM)
-            with open("pause_time", "r") as f:
-                r = f.read()
-                print(r.split())
-                cls.__pause_time = int(r.split()[0])
+            # Config._script_proc.send_signal(SIGTERM)
+            try:
+                with open("pause_time", "r") as f:
+                    r = f.read()
+                    print(r.split())
+                    cls.__pause_time = int(r.split()[0])
+            except IndexError:
+                cls.pause()
+            Config._script_proc.kill()
     
     @classmethod
     def resume(cls) -> None:
@@ -98,7 +101,7 @@ class MusicQueue:
             # print("Here")
             with open("pause_time", "r") as f:
                 r = f.read()
-                cls.__current = int(r.split()[1])
+                # cls.__current = int(r.split()[1])
                 # print(cls.__current, cls.__pause_time)
             exec(
                 Cmd.PLAY,

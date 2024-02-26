@@ -5,7 +5,7 @@ import os
 from shared import Cmd, CMD_PROMPT
 import pygame
 from datetime import datetime
-from signal import signal, SIGTERM
+# from signal import signal, SIGTERM
 
 argv = sys.argv
 cmd = Cmd(argv[1])
@@ -31,26 +31,26 @@ def play(now_playin: int = 0):
     # execution.
     # os.write(0, bytes(CMD_PROMPT, encoding='utf-8'))
     while pygame.mixer.music.get_busy():
-    # current_pos = music.get_pos()
-        # print(current_pos, end="\r")
-        # with open("pause_time", "w") as f:
-        #     f.write(f"{current_pos} {now_playin}")
-        #     f.flush()
-        #     os.fsync(f.fileno())
-        current_playing = now_playin
+        current_pos = pygame.mixer.music.get_pos()
+        print(current_pos, end="\r")
+        with open("pause_time", "w") as f:
+            f.write(f"{current_pos} {now_playin}")
+            f.flush()
+            os.fsync(f.fileno())
+        # current_playing = now_playin
         pass
     play(now_playin + 1)
 
 
-def __signal_handler(_, __):
-    """Function to react to stop/
-    kill signal from parent process"""
-    with open("pause_time", "w") as f:
-        current_pos = pygame.mixer.music.get_pos()
-        f.write(f"{current_pos} {current_playing}")
-        exit(0)
+# def __signal_handler(_, __):
+#     """Function to react to stop/
+#     kill signal from parent process"""
+#     with open("pause_time", "w") as f:
+#         current_pos = pygame.mixer.music.get_pos()
+#         f.write(f"{current_pos} {current_playing}")
+#         exit(0)
 
-signal(SIGTERM, __signal_handler)
+# signal(SIGTERM, __signal_handler)
 
 if cmd == Cmd.PLAY:
     play()
