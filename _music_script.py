@@ -27,10 +27,10 @@ def play(now_playin: int = 0):
     print("\r[NOW PLAYING]", opts[now_playin])
     # pygame.mixer.music.play()
     pygame.mixer.music.play()
-    pygame.mixer.music.set_pos((pos / 750))
+    pygame.mixer.music.set_pos((pos / 1000))
 
     # To fix that issue with command prompt not coming up after play's
-    # execution.
+    # execution...
     # os.write(0, bytes(CMD_PROMPT, encoding='utf-8'))
     while pygame.mixer.music.get_busy():
         current_pos = pygame.mixer.music.get_pos() + pos
