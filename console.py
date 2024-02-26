@@ -170,6 +170,9 @@ class MusicPlayer(cmd.Cmd):
     def emptyline(self) -> None:
         pass
 
+    def do_EOF(self, _):
+        exit(0)
+
     def default(self, line: str) -> None:
         print(f'[ERROR] Invalid command: {line}')
         print()
