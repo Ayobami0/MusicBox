@@ -23,16 +23,19 @@ class MusicQueue:
         if cls.__count == 0:
             raise Exception("No Songs in Queue")
         ### Update the __current from runnig file from script.
-        if Config._script_proc:    
-            with open("pause_time", "r") as f:
-                r = f.read()
-                print("Here", r.split())
-                cls.__current += int(r.split()[1])
-        #----------------------------------------->
-        if cls.__current + 1 >= cls.__count:
-            raise Exception("Last Song In Queue")
-        cls.__current += 1
-        cls.play()
+        try:
+            if Config._script_proc:    
+                with open("pause_time", "r") as f:
+                    r = f.read()
+                    print("Here", r.split())
+                    cls.__current += int(r.split()[1])
+            #----------------------------------------->
+            if cls.__current + 1 >= cls.__count:
+                raise Exception("Last Song In Queue")
+            cls.__current += 1
+            cls.play()
+        except IndexError:
+            cls.next()
 
     @classmethod
     def prev(cls) -> None:
@@ -40,16 +43,19 @@ class MusicQueue:
         if cls.__count == 0:
             raise Exception("No Songs in Queue")
         ## Update __current from running file, Script.
-        if Config._script_proc:
-            with open("pause_time", "r") as f:
-                r = f.read()
-                cls.__current += int(r.split()[1])
-        #----------------------------------------->
-        if cls.__current - 1 < 0:
-            raise Exception("First Song In Queue")
-        cls.__current -= 1
+        try:
+            if Config._script_proc:
+                with open("pause_time", "r") as f:
+                    r = f.read()
+                    cls.__current += int(r.split()[1])
+            #----------------------------------------->
+            if cls.__current - 1 < 0:
+                raise Exception("First Song In Queue")
+            cls.__current -= 1
 
-        cls.play()
+            cls.play()
+        except IndexError:
+            cls.prev()
 
     @classmethod
     def list(cls) -> list:
