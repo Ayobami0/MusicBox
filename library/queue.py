@@ -85,7 +85,7 @@ class MusicQueue:
         from signal import SIGTERM
         cls.__pause_status = True
         if Config._script_proc:
-            # Config._script_proc.send_signal(SIGTERM)
+            Config._script_proc.send_signal(SIGTERM)
             try:
                 with open("pause_time", "r") as f:
                     r = f.read()
@@ -93,7 +93,7 @@ class MusicQueue:
                     cls.__pause_time = int(r.split()[0])
             except IndexError:
                 cls.pause()
-            Config._script_proc.kill()
+            # Config._script_proc.kill()
     
     @classmethod
     def resume(cls) -> None:
@@ -101,8 +101,6 @@ class MusicQueue:
             # print("Here")
             with open("pause_time", "r") as f:
                 r = f.read()
-                # cls.__current = int(r.split()[1])
-                # print(cls.__current, cls.__pause_time)
             exec(
                 Cmd.PLAY,
                 cls.__pause_time,
