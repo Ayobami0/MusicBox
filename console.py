@@ -9,7 +9,13 @@ pygame.mixer.init()
 
 
 class MusicPlayer(cmd.Cmd):
+
     def do_play(self, fp):
+        """Play songs in queue, a single song or series of songs.
+Starts from top of queue or last played song if next or prev is used.
+
+Usage:
+    play [filename ...]"""
         try:
             if fp != "":
                 song: pygame.mixer.Sound = Music(fp)
@@ -22,19 +28,30 @@ class MusicPlayer(cmd.Cmd):
             print("[ERROR] ", e)
             pass
 
-    def do_queue(self, _):
+    def do_queue(self, line: str):
+        """Add songs to the main playing queue.
+
+Usage:
+    queue <filename> ...
+    queue <directory>"""
         try:
-            song1: pygame.mixer.Sound = Music("./jingles/jingle-bells.mp3")
-            song2: pygame.mixer.Sound = Music("./jingles/jingle-bells-rock.mp3")
-            song3: pygame.mixer.Sound = Music("./Over_the_Horizon.mp3")
-            song4: pygame.mixer.Sound = Music("./jingles/Ayo-by-IF-E.mp3")
-            MusicQueue.add(song1, song2, song3, song4)
+            if line == '':
+                return
+            paths = line.split()
+            if len(paths) == 1:
+                MusicQueue.add()
+            else:
+                MusicQueue.add(*[Music(file) for file in paths])
             return
         except Exception as e:
             print("[ERROR] ", e)
             pass
 
     def do_next(self, _):
+        """Shift to next song in the main queue.
+
+Usage:
+    next"""
         try:
             MusicQueue.next()
             print(MusicQueue.show())
@@ -43,8 +60,10 @@ class MusicPlayer(cmd.Cmd):
             pass
 
     def do_prev(self, _):
-        """Function to go to the
-        previous song on the queue"""
+        """Shift to previous song in the main queue.
+
+Usage:
+    prev"""
         try:
             MusicQueue.prev()
             print(MusicQueue.show())
@@ -52,6 +71,14 @@ class MusicPlayer(cmd.Cmd):
             print("[ERROR]", e)
 
     def do_list(self, line):
+        """List songs.
+
+Usage:
+    list
+    list queue
+
+Options:
+    queue   Show only queued songs"""
         if line == "":
             list_songs(Config.list_dir())
             return
@@ -59,7 +86,10 @@ class MusicPlayer(cmd.Cmd):
             print([s.filename for s in MusicQueue.list()])
 
     def do_pause(self, _):
-        """Function to pause sound"""
+        """Pause the current playing song in the main queue.
+
+Usage:
+    pause"""
         try:
             MusicQueue.pause()
         except Exception as e:
@@ -67,8 +97,10 @@ class MusicPlayer(cmd.Cmd):
         # channel.pause()
 
     def do_resume(self, _):
-        """Function to resume a
-        playing sound"""
+        """Resume playback of the paused song in the main queue.
+
+Usage:
+    resume"""
         try:
             MusicQueue.resume()
         except Exception as e:

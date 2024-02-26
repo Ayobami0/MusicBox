@@ -1,10 +1,12 @@
 import os
-from console import MusicPlayer
-from library.config import Config
+
+os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "hide"
 
 
 if __name__ == "__main__":
-    os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "hide"
+    from console import MusicPlayer
+    from library.config import Config
+
     Config.load()
     Config.include_dir("library", "jingles", ".")
 
