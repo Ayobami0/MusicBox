@@ -1,4 +1,3 @@
-import os
 import sys
 import os
 
@@ -35,10 +34,18 @@ def play(now_playin: int = 0):
     while pygame.mixer.music.get_busy():
         current_pos = pygame.mixer.music.get_pos() + pos
         # print(current_pos, end="\r")
-        with open("pause_time", "w") as f:
-            f.write(f"{current_pos} {now_playin}")
-            # f.flush()
-            # os.fsync(f.fileno())
+        # with open("pause_time", "w", buffering=1) as f:
+        #     f.write(f"{current_pos} {now_playin}")
+        #     # f.flush()
+        #     # os.fsync(f.fileno())
+        try:
+            fd1 = os.open("pause_time", os.O_WRONLY | os.O_CREAT | os.O_TRUNC)
+            val = f"{current_pos} {now_playin}"
+            os.write(fd1, val.encode())
+        except OSError:
+            pass
+        finally:
+            os.close(fd1)
         current_playing = now_playin
         pass
     play(now_playin + 1)

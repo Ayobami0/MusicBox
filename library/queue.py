@@ -25,7 +25,7 @@ class MusicQueue:
         ### Update the __current from runnig file from script.
         try:
             if Config._script_proc:    
-                with open("pause_time", "r") as f:
+                with open("pause_time", "r", encoding="utf-8") as f:
                     r = f.read()
                     print("Here", r.split())
                     cls.__current += int(r.split()[1])
