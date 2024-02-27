@@ -29,7 +29,7 @@ class MusicQueue:
         if cls.__current + 1 >= cls.__count:
             raise Exception("Last Song In Queue")
         try:
-            if Config._script_proc:    
+            if Config._script_proc is not None:    
                 with open("pause_time", "r", encoding="utf-8") as f:
                     r = f.read()
                     print("Here", r.split())
@@ -46,7 +46,7 @@ class MusicQueue:
         if cls.__current - 1 < 0:
             raise Exception("First Song In Queue")
         try:
-            if Config._script_proc:
+            if Config._script_proc is not None:
                 with open("pause_time", "r") as f:
                     r = f.read()
                     cls.__current += int(r.split()[1])
@@ -92,14 +92,16 @@ class MusicQueue:
     @classmethod
     def pause(cls) -> None:
         cls.__pause_status = True
-        if Config._script_proc:
+        if Config._script_proc is not None:
             try:
                 with open("pause_time", "r") as f:
                     r = f.read()
                     cls.__pause_time = int(r.split()[0])
+                    cls.__current += int(r.split()[1])
             except IndexError:
                 cls.pause()
             Config._script_proc.kill()
+            Config._script_proc = None
 
     @classmethod
     def resume(cls) -> None:
