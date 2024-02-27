@@ -1,3 +1,4 @@
+import os
 import sys
 
 from shared import Cmd
@@ -10,7 +11,7 @@ pygame.init()
 current_playing = 0
 
 
-def play(now_playin: int = 0):
+def play(now_playin: int = 0, pos: int = pos):
     global current_playing
     opts = argv[3:]
 
@@ -23,22 +24,17 @@ def play(now_playin: int = 0):
 
     while pygame.mixer.music.get_busy():
         current_pos = pygame.mixer.music.get_pos() + pos
-        with open("pause_time", "w") as f:
-            f.write(f"{current_pos} {now_playin}")
+        try:
+            fd1 = os.open("pause_time", os.O_WRONLY | os.O_CREAT | os.O_TRUNC)
+            val = f"{current_pos} {now_playin}"
+            os.write(fd1, val.encode())
+        except OSError:
+            pass
+        finally:
+            os.close(fd1)
         current_playing = now_playin
         pass
-    play(now_playin + 1)
-
-
-# def __signal_handler(_, __):
-#     """Function to react to stop/
-#     kill signal from parent process"""
-#     with open("pause_time", "w") as f:
-#         current_pos = pygame.mixer.music.get_pos()
-#         f.write(f"{current_pos} {current_playing}")
-#         exit(0)
-
-# signal(SIGTERM, __signal_handler)
+    play(now_playin + 1, pos=0)
 
 
 if cmd == Cmd.PLAY:
