@@ -2,9 +2,9 @@
 that will be used in the program"""
 from pathlib import Path
 import datetime
+from mutagen import _file
 
-from library.config import Config #Init should be in an init file
-from library.music import Music
+from library.config import Config
 from subprocess import Popen, PIPE
 
 import sys
@@ -27,17 +27,23 @@ def list_songs(folders: list) -> list:
     return mp3_total_files
 
 
-def show_metadata(music) -> None:
-    """Prints a representation of a music metadata."""
-    meta = music.metadata
+def show_metadata(song: Path) -> None:
+    """Prints a representation of a song metadata."""
+    if not song.is_file():
+        raise Exception(f'{song} is not a valid file')
+    meta = _file.File(song)
+    if meta is None:
+        raise Exception(f'{song} is not a valid song file')
     length = datetime.timedelta(seconds=int(meta.info.length))
     metadata = f"""
-{music.filename}
+===============================
+{song}
 TITLE  : {meta.get('TIT2')}
 ARTIST : {meta.get('TPE1')}
 LENGTH : {length}
 ALBUM  : {meta.get('TALB')}
 TRACK  : {meta.get('TRCK')}
+===============================
 """.strip()
     print(metadata, flush=True)
 
