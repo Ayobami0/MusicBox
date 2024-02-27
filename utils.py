@@ -57,3 +57,34 @@ def exec(command: Cmd, pos: int, *args: Path | str):
         ]
     p = Popen(cmd, stdout=PIPE)
     Config._script_proc = p
+
+
+def split_tokens(line):
+    """Function to handle spacing between tokens, when inside quotes"""
+    open_quotes = False
+    close_quotes = False
+    final_words = []
+    word = ""
+    for char in line:
+        if not open_quotes and char != '"':
+            if char != " ":
+                word += char
+            else:
+                final_words.append(word)
+                word = ""
+        elif char == '"':
+            if open_quotes:
+                open_quotes = False
+                close_quotes = True
+                final_words.append(word)
+                word = ""
+            elif open_quotes == False:
+                open_quotes = True
+        elif open_quotes:
+            word += char
+    if open_quotes == True:
+        raise Exception(f"{word} does not have closing quotes")
+    return (final_words)
+
+if __name__ == "__main__":
+    print(split_tokens('My name is "my /school/"'))

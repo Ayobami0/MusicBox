@@ -3,7 +3,7 @@ import pygame
 import cmd
 from library.config import Config
 from library.queue import MusicQueue
-from utils import list_songs, show_metadata
+from utils import list_songs, show_metadata, split_tokens
 
 pygame.mixer.init()
 
@@ -28,7 +28,9 @@ class MusicPlayer(cmd.Cmd):
                     MusicQueue.play_one_or_more(file_or_dir)
                 return
             else:
+                #MusicQueue.clear ## Overwrite queue.
                 MusicQueue.add(*paths)
+                # MusicQueue.play()
                 return
         except Exception as e:
             print("[ERROR] ", e)
@@ -38,12 +40,12 @@ class MusicPlayer(cmd.Cmd):
         """Add songs to the main playing queue from a directory, a list of songs.
 
         \rUsage:
-            \r\tqueue [filename ... | directory]"""
+            \r\tqueue [filename ... | directory] [overwrite]"""
         try:
             if line == "":
                 MusicQueue.add(*[s for s in Config.list_songs()])
                 return
-            paths = line.split()
+            paths = line.split() #Queue with integer list.
             if len(paths) == 1:
                 file_or_dir = Path(paths[0])
                 if file_or_dir.is_dir():
@@ -166,21 +168,22 @@ class MusicPlayer(cmd.Cmd):
 
         except Exception as e:
             print("[ERROR]", e)
-    
+
     def do_preset(self, line):
         """preset sets the directories that MusicBox uses to search for songs.
         \rBy default, MusicBox presets the current directory and the jingles directory.
 
         \rUsage:
-             \r\tpreset <dir1> <dir2> ... | overwrite
-        
+             \r\tpreset <dir1> <dir2> ... [overwrite]
+
         \rOptions:
             \r\t<dir> ...               This will append the directories to existing search list.
             \r\t<dir> ... overwrite     This will overwite the existing search list with new list.
-        
+
         \rNOTE:
             \r\t1. overwrite will only overwrite, if at least one of the directories specified is valid.
             \r\t2. Each directory is written as the the relative or absolute path.
+            \r\t3. Double quotes around any given directory counts as one. e.g "Dell 7490"
         """
         try:
             if line == "" or line.split()[0] == "overwrite":
@@ -189,7 +192,7 @@ class MusicPlayer(cmd.Cmd):
                 print(self.do_preset.__doc__)
                 return
             overwrite = False
-            dirs = line.split()
+            dirs = split_tokens(line)
             invalid_paths = set()
             valid_paths = set()
             if dirs[-1] == "overwrite":
@@ -211,10 +214,10 @@ class MusicPlayer(cmd.Cmd):
                 print("""\r
                       \rThe following are not directories and could not be added:""")
                 print("\t------->", *invalid_paths)
-            
+
         except Exception as e:
             print("[ERROR]", e)
-            
+
     def do_search_list(self, line):
         """This shows the preset directories that MusicBox uses to search for songs.
 
@@ -230,8 +233,6 @@ class MusicPlayer(cmd.Cmd):
             print(*(Config.list_dir()))
         except Exception as e:
             print("[ERROR]", e)
-
-    
 
     def emptyline(self) -> None:
         pass
