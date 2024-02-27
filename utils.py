@@ -1,6 +1,7 @@
 """ This module will contain util functions
 that will be used in the program"""
 from pathlib import Path
+import glob
 import datetime
 from mutagen import _file
 
@@ -21,6 +22,7 @@ def list_songs(folders: list) -> list:
         folder_path = Path(folder)
         if folder_path.exists() and folder_path.is_dir():
             mp3_files = folder_path.glob("*.mp3")
+            # mp3_files = glob.glob(str(folder_path / ".{mp3, wav}"))
             mp3_total_files.extend([str(mp3) for mp3 in mp3_files])
     for idx, mp3 in enumerate(mp3_total_files):
         print(idx, mp3)
