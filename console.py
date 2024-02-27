@@ -22,13 +22,17 @@ class MusicPlayer(cmd.Cmd):
             paths = line.split()
             if len(paths) == 1:
                 file_or_dir = Path(paths[0])
+                if not file_or_dir.exists():
+                    raise Exception(
+                        f"No such file or directory: {file_or_dir}",
+                    )
                 if file_or_dir.is_dir():
                     MusicQueue.play_one_or_more(*file_or_dir.glob("*.mp3"))
                 else:
                     MusicQueue.play_one_or_more(file_or_dir)
                 return
             else:
-                #MusicQueue.clear ## Overwrite queue.
+                # MusicQueue.clear ## Overwrite queue.
                 MusicQueue.add(*paths)
                 # MusicQueue.play()
                 return
@@ -40,19 +44,36 @@ class MusicPlayer(cmd.Cmd):
         """Add songs to the main playing queue from a directory, a list of songs.
 
         \rUsage:
-            \r\tqueue [filename ... | directory] [overwrite]"""
+            \r\tqueue [preset-index ... | filename ... | directory] [overwrite]"""
         try:
             if line == "":
                 MusicQueue.add(*[s for s in Config.list_songs()])
                 return
-            paths = line.split() #Queue with integer list.
-            if len(paths) == 1:
+            paths = line.split()  # Queue with integer list.
+            if len(paths) == 1 and not paths[0].isdigit():
                 file_or_dir = Path(paths[0])
+                if not file_or_dir.exists():
+                    raise Exception(
+                        f"No such file or directory: {file_or_dir}",
+                    )
                 if file_or_dir.is_dir():
                     MusicQueue.add(*file_or_dir.glob("*.mp3"))
                 MusicQueue.add(file_or_dir)
             else:
-                MusicQueue.add(*[Path(file) for file in paths])
+                preset_indexes = set()
+                for f in paths:
+                    if f.isdigit():
+                        preset_indexes.add(int(f))
+                    elif not f.isdigit() and len(preset_indexes) != 0:
+                        raise Exception(
+                            "Arguments must be either preset-indexes, files or directory"
+                        )
+                if len(preset_indexes) != 0:
+                    MusicQueue.add(
+                        *(Config.list_songs()[i] for i in preset_indexes),
+                    )
+                else:
+                    MusicQueue.add(*(Path(file) for file in paths))
             return
         except Exception as e:
             print("[ERROR] ", e)
@@ -70,7 +91,7 @@ class MusicPlayer(cmd.Cmd):
             MusicQueue.next()
             print(MusicQueue.show())
         except Exception as e:
-            print("[ERROR] ", e)
+            print("[ERROR]", e)
             pass
 
     def do_prev(self, line):
@@ -140,7 +161,8 @@ class MusicPlayer(cmd.Cmd):
 
         \rOptions:
             \r\tqueue playing           Shows the info of the currently playing song.
-            \r\tqueue <song-number>     Shows the info of a song in queue by it's index."""
+            \r\tqueue <song-number>     Shows the info of a song in queue by it's index.
+        """
         try:
             if line == "" or len(line.split()) > 2:
                 print(self.do_info.__doc__)
@@ -161,7 +183,7 @@ class MusicPlayer(cmd.Cmd):
                         show_metadata(song)
                 except IndexError:
                     raise Exception(f"{cmd[1]} is not part of the queue.")
-            elif cmd[0] == '':
+            elif cmd[0] == "":
                 show_metadata(Path(cmd[0]))
             else:
                 print(self.do_info.__doc__)
@@ -188,7 +210,9 @@ class MusicPlayer(cmd.Cmd):
         try:
             if line == "" or line.split()[0] == "overwrite":
                 if line.split()[0] == "overwrite":
-                    raise Exception("preset takes at least a directory before `overwrite`")
+                    raise Exception(
+                        "preset takes at least a directory before `overwrite`"
+                    )
                 print(self.do_preset.__doc__)
                 return
             overwrite = False
@@ -211,8 +235,10 @@ class MusicPlayer(cmd.Cmd):
                 print("The following directories have been added for search:")
                 print("\t----->  ", *valid_paths)
             if len(invalid_paths) > 0:
-                print("""\r
-                      \rThe following are not directories and could not be added:""")
+                print(
+                    """\r
+                      \rThe following are not directories and could not be added:"""
+                )
                 print("\t------->", *invalid_paths)
 
         except Exception as e:
@@ -229,7 +255,7 @@ class MusicPlayer(cmd.Cmd):
                     """search_list does not take additional options
                     \rUsage: search_list
                     """
-                    )
+                )
             print(*(Config.list_dir()))
         except Exception as e:
             print("[ERROR]", e)
@@ -241,6 +267,6 @@ class MusicPlayer(cmd.Cmd):
         exit(0)
 
     def default(self, line: str) -> None:
-        print(f'[ERROR] Invalid command: {line}')
+        print(f"[ERROR] Invalid command: {line}")
         print()
         self.do_help("")
