@@ -166,6 +166,72 @@ class MusicPlayer(cmd.Cmd):
 
         except Exception as e:
             print("[ERROR]", e)
+    
+    def do_preset(self, line):
+        """preset sets the directories that MusicBox uses to search for songs.
+        \rBy default, MusicBox presets the current directory and the jingles directory.
+
+        \rUsage:
+             \r\tpreset <dir1> <dir2> ... | overwrite
+        
+        \rOptions:
+            \r\t<dir> ...               This will append the directories to existing search list.
+            \r\t<dir> ... overwrite     This will overwite the existing search list with new list.
+        
+        \rNOTE:
+            \r\t1. overwrite will only overwrite, if at least one of the directories specified is valid.
+            \r\t2. Each directory is written as the the relative or absolute path.
+        """
+        try:
+            if line == "" or line.split()[0] == "overwrite":
+                if line.split()[0] == "overwrite":
+                    raise Exception("preset takes at least a directory before `overwrite`")
+                print(self.do_preset.__doc__)
+                return
+            overwrite = False
+            dirs = line.split()
+            invalid_paths = set()
+            valid_paths = set()
+            if dirs[-1] == "overwrite":
+                dirs = dirs[:-1]
+                overwrite = True
+            for dir in dirs:
+                if Path(dir).is_dir():
+                    # Config.include_dir(dir)
+                    valid_paths.add(dir)
+                else:
+                    invalid_paths.add(dir)
+            if len(valid_paths) > 0:
+                if overwrite:
+                    Config.clear_list()
+                Config.include_dir(*valid_paths)
+                print("The following directories have been added for search:")
+                print("\t----->  ", *valid_paths)
+            if len(invalid_paths) > 0:
+                print("""\r
+                      \rThe following are not directories and could not be added:""")
+                print("\t------->", *invalid_paths)
+            
+        except Exception as e:
+            print("[ERROR]", e)
+            
+    def do_search_list(self, line):
+        """This shows the preset directories that MusicBox uses to search for songs.
+
+        \rUsage: search_list
+        """
+        try:
+            if line != "":
+                raise Exception(
+                    """search_list does not take additional options
+                    \rUsage: search_list
+                    """
+                    )
+            print(*(Config.list_dir()))
+        except Exception as e:
+            print("[ERROR]", e)
+
+    
 
     def emptyline(self) -> None:
         pass
