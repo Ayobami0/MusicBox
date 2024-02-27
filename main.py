@@ -8,6 +8,4 @@ if __name__ == "__main__":
     from library.config import Config
 
     Config.load()
-    Config.include_dir("library", "jingles", ".")
-
     MusicPlayer().cmdloop()

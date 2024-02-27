@@ -7,7 +7,8 @@ from subprocess import Popen
 
 class Config:
     __PRESET_DIRS: set[Path] = set()
-    __DEFAULT_PATH = Path("jingles")
+    __DEFAULT_PATH: Path = Path("jingles")
+
     _surfix_glob = ''
     _script_proc: Popen | None = None
 
@@ -16,6 +17,7 @@ class Config:
         default_path = cls.__DEFAULT_PATH
         if default_path.exists():
             cls.__PRESET_DIRS.add(default_path)
+            cls.__PRESET_DIRS.add(Path("."))
 
     def save(self):
         ...
@@ -48,3 +50,8 @@ class Config:
         for d in cls.__PRESET_DIRS:
             songs.update(d.glob('*.mp3'))
         return [s for s in songs]
+
+    @classmethod
+    def clear_list(cls) -> None:
+        """Clear all the existing preset directory"""
+        cls.__PRESET_DIRS.clear()

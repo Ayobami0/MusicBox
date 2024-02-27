@@ -21,6 +21,10 @@ class MusicQueue:
             cls.__current = 0
         cls.__count += len(songs)
         cls.__queue.extend(songs)
+    
+    def clear(cls):
+        """Clear all songs in queue"""
+        cls.__queue.clear()
 
     @classmethod
     def next(cls) -> None:
@@ -32,7 +36,7 @@ class MusicQueue:
             if Config._script_proc is not None:    
                 with open("pause_time", "r", encoding="utf-8") as f:
                     r = f.read()
-                    print("Here", r.split())
+                    print("Here", r.split()) ##
                     cls.__current += int(r.split()[1])
             cls.__current += 1
             cls.play()
