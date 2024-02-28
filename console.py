@@ -300,13 +300,15 @@ class MusicPlayer(cmd.Cmd):
             Config._script_proc.kill()
             Config._script_proc = None
         print(
-            """\nGood Bye to MusicBox v1.0.\n
-            \r-->  Developed by Oludemi Ayobami and Akingbeni David using Python.
-            \r-->  Done as ALX Foundations Portfolio Project.
-            \r-->  To see more information about us, check out our GitHub profile using
-            \r|
-            \r|->  https://github.com/Ayobami0 (Ayobami), https://github.com/deelight-del/ (David)
-            """)
+        """\n\nGood Bye to MusicBox v1.0.\n
+        \r-->  Developed by OLUDEMI Ayobami and AKINGBENI David using Python.
+        \r-->  Done as ALX Foundations Portfolio Project.
+        \r-->  To see more information about us, check out\
+ our GitHub profile using
+        \r|
+        \r|->  https://github.com/Ayobami0      (Ayobami)
+        \r|->  https://github.com/deelight-del/ (David)
+          """)
         exit(0)
     
     def do_EOF(self, _):
