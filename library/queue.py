@@ -104,7 +104,8 @@ class MusicQueue:
                     cls.__current += int(r.split()[1])
             except IndexError:
                 cls.pause()
-            Config._script_proc.kill()
+            if Config._script_proc is not None:
+                Config._script_proc.kill()
             Config._script_proc = None
 
     @classmethod
