@@ -29,10 +29,9 @@ class MusicQueue:
         if cls.__current + 1 >= cls.__count:
             raise Exception("Last Song In Queue")
         try:
-            if Config._script_proc is not None:    
+            if Config._script_proc is not None:
                 with open("pause_time", "r", encoding="utf-8") as f:
                     r = f.read()
-                    print("Here", r.split()) ##
                     cls.__current += int(r.split()[1])
             cls.__current += 1
             cls.play()

@@ -176,7 +176,7 @@ class MusicPlayer(cmd.Cmd):
         """Check the info of a music file, or the currently playing song.
 
         \rUsage:
-            \r\tinfo <filename> | queue <song-number | playing>
+            \r\tinfo <filename> | <queue <song-number | playing>
 
         \rOptions:
             \r\tqueue playing           Shows the info of the currently playing song.
@@ -202,10 +202,8 @@ class MusicPlayer(cmd.Cmd):
                         show_metadata(song)
                 except IndexError:
                     raise Exception(f"{cmd[1]} is not part of the queue.")
-            elif cmd[0] == "":
-                show_metadata(Path(cmd[0]))
             else:
-                print(self.do_info.__doc__)
+                show_metadata(Path(cmd[0]))
 
         except Exception as e:
             print("[ERROR]", e)
