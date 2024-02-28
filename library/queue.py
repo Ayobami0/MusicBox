@@ -21,10 +21,6 @@ class MusicQueue:
             cls.__current = 0
         cls.__count += len(songs)
         cls.__queue.extend(songs)
-    
-    def clear(cls):
-        """Clear all songs in queue"""
-        cls.__queue.clear()
 
     @classmethod
     def next(cls) -> None:
