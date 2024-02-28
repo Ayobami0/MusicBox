@@ -10,7 +10,8 @@ pygame.mixer.init()
 
 class MusicPlayer(cmd.Cmd):
     def do_play(self, line):
-        """Play songs in queue, a single song, series of songs or songs in a directory.
+        """Play songs in queue, a single song,\
+ series of songs or songs in a directory.
         \rStarts from top of queue or last played song if next or prev is used.
 
         \rUsage:
@@ -41,10 +42,12 @@ class MusicPlayer(cmd.Cmd):
             pass
 
     def do_queue(self, line: str):
-        """Add songs to the main playing queue from a directory, a list of songs.
+        """Add songs to the main playing queue\
+ from a directory, a list of songs.
 
         \rUsage:
-            \r\tqueue [preset-index ... | filename ... | directory] [overwrite]"""
+            \r\tqueue [preset-index ... | filename ... | directory]\
+ [overwrite]"""
         try:
             if line == "":
                 MusicQueue.add(*[s for s in Config.list_songs()])
@@ -66,7 +69,8 @@ class MusicPlayer(cmd.Cmd):
                         preset_indexes.add(int(f))
                     elif not f.isdigit() and len(preset_indexes) != 0:
                         raise Exception(
-                            "Arguments must be either preset-indexes, files or directory"
+                            """Arguments must be either preset-indexes,\
+ files or directory"""
                         )
                 if len(preset_indexes) != 0:
                     MusicQueue.add(
@@ -131,6 +135,21 @@ class MusicPlayer(cmd.Cmd):
 
         \rUsage:
             \r\tpause"""
+        try:
+            if line == "":
+                MusicQueue.pause()
+            else:
+                print(self.do_pause.__doc__)
+        except Exception as e:
+            print("[ERROR]", e)
+        # channel.pause()
+
+    def do_stop(self, line):
+        """Stop the current playing song in the main queue.
+        \rBehaviour is exactly like pause.
+
+        \rUsage:
+            \r\tstop"""
         try:
             if line == "":
                 MusicQueue.pause()
@@ -259,10 +278,39 @@ class MusicPlayer(cmd.Cmd):
             print(*(Config.list_dir()))
         except Exception as e:
             print("[ERROR]", e)
+    
+    def do_reset(self, line):
+        """reset the existing queue that MusicBox is using to play"""
+        try:
+            MusicQueue.clear()
+        except Exception as e:
+            print("[ERROR]", e)
 
     def emptyline(self) -> None:
         pass
 
+    def do_exit(self, _):
+
+        """Used to exit MusicBox.
+        \rUsage: exit
+
+        \rAnything after exit is not taken into consideration.
+        """
+        if Config._script_proc is not None:
+            Config._script_proc.kill()
+            Config._script_proc = None
+        print(
+        """\n\nGood Bye to MusicBox v1.0.\n
+        \r-->  Developed by OLUDEMI Ayobami and AKINGBENI David using Python.
+        \r-->  Done as ALX Foundations Portfolio Project.
+        \r-->  To see more information about us, check out\
+ our GitHub profile using
+        \r|
+        \r|->  https://github.com/Ayobami0      (Ayobami)
+        \r|->  https://github.com/deelight-del/ (David)
+          """)
+        exit(0)
+    
     def do_EOF(self, _):
         exit(0)
 

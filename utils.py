@@ -11,6 +11,27 @@ from subprocess import Popen, PIPE
 import sys
 from shared import Cmd
 
+import signal
+
+
+def interrupt_handler(_, __):
+    """This is used to handle Ctrl C
+    event handling..."""
+    if Config._script_proc is not None:
+        Config._script_proc.kill()
+        Config._script_proc = None
+    print(
+        """\n\nGood Bye to MusicBox v1.0.\n
+        \r-->  Developed by OLUDEMI Ayobami and AKINGBENI David using Python.
+        \r-->  Done as ALX Foundations Portfolio Project.
+        \r-->  To see more information about us, check out\
+ our GitHub profile using
+        \r|
+        \r|->  https://github.com/Ayobami0      (Ayobami)
+        \r|->  https://github.com/deelight-del/ (David)
+          """)
+    exit(0)
+
 
 def list_songs(folders: list) -> list:
     """Function to accepts list
@@ -80,11 +101,11 @@ def split_tokens(line):
                 close_quotes = True
                 final_words.append(word)
                 word = ""
-            elif open_quotes == False:
+            elif open_quotes is False:
                 open_quotes = True
         elif open_quotes:
             word += char
-    if open_quotes == True:
+    if open_quotes is True:
         raise Exception(f"{word} does not have closing quotes")
     while final_words.count(""):
         final_words.remove("")
