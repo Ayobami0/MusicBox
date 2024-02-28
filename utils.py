@@ -87,6 +87,3 @@ def split_tokens(line):
     while final_words.count(""):
         final_words.remove("")
     return (final_words)
-
-if __name__ == "__main__":
-    print(split_tokens('My name is "my /school/" "Nevr Mind"'))
