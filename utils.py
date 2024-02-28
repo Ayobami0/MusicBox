@@ -86,7 +86,6 @@ def split_tokens(line):
             word += char
     if open_quotes == True:
         raise Exception(f"{word} does not have closing quotes")
+    while final_words.count(""):
+        final_words.remove("")
     return (final_words)
-
-if __name__ == "__main__":
-    print(split_tokens('My name is "my /school/"'))
