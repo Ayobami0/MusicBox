@@ -1,7 +1,7 @@
 # MusicBox
-___
 A music player for your command line built with python.
-![MusicBox] (screenshots/screenshot1.png)
+
+[MusicBox] (./screenshots/screenshot1.png "MusicBox")
 ### Installation
 ___
 Requirements: python >= 3.8, pip, pygame, mutagen
