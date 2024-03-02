@@ -15,8 +15,9 @@ class MusicQueue:
         for s in songs:
             if not s.exists():
                 raise Exception(f'File {s.name} does not exists')
-            if not s.is_file:
+            if not s.is_file():
                 raise Exception(f'File {s.name} is a directory')
+            # Add check for if song is valid/not
         if cls.__count == 0:
             cls.__current = 0
         cls.__count += len(songs)
@@ -29,10 +30,9 @@ class MusicQueue:
         if cls.__current + 1 >= cls.__count:
             raise Exception("Last Song In Queue")
         try:
-            if Config._script_proc is not None:    
+            if Config._script_proc is not None:
                 with open("pause_time", "r", encoding="utf-8") as f:
                     r = f.read()
-                    print("Here", r.split()) ##
                     cls.__current += int(r.split()[1])
             cls.__current += 1
             cls.play()
@@ -63,6 +63,10 @@ class MusicQueue:
     @classmethod
     def get_current(cls) -> Path:
         return cls.__queue[cls.__current]
+
+    @classmethod
+    def set_current(cls, curr: int):
+        cls.__current = curr
 
     @classmethod
     def show(cls):

@@ -12,6 +12,7 @@ import sys
 from shared import Cmd
 
 import signal
+from functools import reduce
 
 
 def interrupt_handler(_, __):
@@ -110,3 +111,14 @@ def split_tokens(line):
     while final_words.count(""):
         final_words.remove("")
     return (final_words)
+
+# def sift_digits(args):
+#     """Function to take an iterator and return back the\
+#     args if each arg are digits, and otherwise return only
+#     the non-digits strings."""
+#     arg_conditonal = [1 if arg.isdigit() else 0 for arg in args]
+#     arg_conditonal = reduce(lambda x, y: x*y, arg_conditonal)
+#     if arg_conditonal == 1:
+#         return args
+#     else:
+#         for arg in args:

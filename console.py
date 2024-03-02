@@ -15,30 +15,62 @@ class MusicPlayer(cmd.Cmd):
         \rStarts from top of queue or last played song if next or prev is used.
 
         \rUsage:
-            \r\tplay [filename ... | directory]"""
+            \r\tplay [filename ... | directory]
+        \rNOTE:
+            \r\t1. Specifying a directory or more than one song, automatically\
+ overwrites the existing queue (if no error, otherwise the former queue persists)
+            \r\t2. Mixing a directory with song filenames will cause the directory\
+  to raise an error. To mount directories for playing songs: check `help preset` and\
+  `help queue`
+        """
         try:
+            global former_queue
+            former_queue = MusicQueue.list()[:]
             if line == "":
                 MusicQueue.play()
                 return
             paths = line.split()
             if len(paths) == 1:
+                if paths[0].isdigit():
+                    try:
+                        song = MusicQueue.list()[int(paths[0])]
+                        MusicQueue.set_current(int(paths[0]))
+                        MusicQueue.play()
+                        MusicQueue.show()  # Not showing.
+                    except IndexError:
+                        print("[ERROR] Invalid Queue Number")
+                    finally:
+                        return
                 file_or_dir = Path(paths[0])
                 if not file_or_dir.exists():
                     raise Exception(
                         f"No such file or directory: {file_or_dir}",
                     )
                 if file_or_dir.is_dir():
-                    MusicQueue.play_one_or_more(*file_or_dir.glob("*.mp3"))
+                    MusicQueue.clear()
+                    MusicQueue.add(*file_or_dir.glob("*.mp3"))
+                    MusicQueue.play()
                 else:
                     MusicQueue.play_one_or_more(file_or_dir)
                 return
             else:
-                # MusicQueue.clear ## Overwrite queue.
-                MusicQueue.add(*paths)
-                # MusicQueue.play()
+                play_list = {
+                    MusicQueue.list()[int(path)]
+                    if path.isdigit() and int(path) < len(MusicQueue.list())
+                    else Path(path)
+                    for path in paths
+                    }
+                MusicQueue.clear()
+                MusicQueue.add(*play_list)  # Exception for bad song.
+                if len(MusicQueue.list()) < 1:
+                    MusicQueue.add(*former_queue)
+                    return
+                MusicQueue.play()
                 return
         except Exception as e:
             print("[ERROR] ", e)
+            MusicQueue.clear()
+            MusicQueue.add(*former_queue)
             pass
 
     def do_queue(self, line: str):
@@ -61,7 +93,7 @@ class MusicPlayer(cmd.Cmd):
                     )
                 if file_or_dir.is_dir():
                     MusicQueue.add(*file_or_dir.glob("*.mp3"))
-                MusicQueue.add(file_or_dir)
+                MusicQueue.add(file_or_dir)  # adding twice?
             else:
                 preset_indexes = set()
                 for f in paths:
@@ -278,7 +310,7 @@ class MusicPlayer(cmd.Cmd):
             print(*(Config.list_dir()))
         except Exception as e:
             print("[ERROR]", e)
-    
+
     def do_reset(self, line):
         """reset the existing queue that MusicBox is using to play"""
         try:
@@ -300,17 +332,17 @@ class MusicPlayer(cmd.Cmd):
             Config._script_proc.kill()
             Config._script_proc = None
         print(
-        """\n\nGood Bye to MusicBox v1.0.\n
-        \r-->  Developed by OLUDEMI Ayobami and AKINGBENI David using Python.
-        \r-->  Done as ALX Foundations Portfolio Project.
-        \r-->  To see more information about us, check out\
+            """\n\nGood Bye to MusicBox v1.0.\n
+            \r-->  Developed by OLUDEMI Ayobami and AKINGBENI David using Python.
+            \r-->  Done as ALX Foundations Portfolio Project.
+            \r-->  To see more information about us, check out\
  our GitHub profile using
-        \r|
-        \r|->  https://github.com/Ayobami0      (Ayobami)
-        \r|->  https://github.com/deelight-del/ (David)
-          """)
+            \r|
+            \r|->  https://github.com/Ayobami0      (Ayobami)
+            \r|->  https://github.com/deelight-del/ (David)
+            """)
         exit(0)
-    
+
     def do_EOF(self, _):
         exit(0)
 
