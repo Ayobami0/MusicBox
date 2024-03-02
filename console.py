@@ -24,7 +24,6 @@ class MusicPlayer(cmd.Cmd):
   `help queue`
         """
         try:
-            global former_queue
             former_queue = MusicQueue.list()[:]
             if line == "":
                 MusicQueue.play()
@@ -80,6 +79,7 @@ class MusicPlayer(cmd.Cmd):
         \rUsage:
             \r\tqueue [preset-index ... | filename ... | directory]\
  [overwrite]"""
+        replace_overwrite = False
         try:
             if line == "":
                 MusicQueue.add(*[s for s in Config.list_songs()])
@@ -93,8 +93,14 @@ class MusicPlayer(cmd.Cmd):
                     )
                 if file_or_dir.is_dir():
                     MusicQueue.add(*file_or_dir.glob("*.mp3"))
-                MusicQueue.add(file_or_dir)  # adding twice?
+                    return
+                MusicQueue.add(file_or_dir)
             else:
+                if paths[-1] == "overwrite":
+                    replace_overwrite = True
+                    former_queue = MusicQueue.list()[:]
+                    paths = paths[:-1]
+                    MusicQueue.clear()
                 preset_indexes = set()
                 for f in paths:
                     if f.isdigit():
@@ -113,6 +119,9 @@ class MusicPlayer(cmd.Cmd):
             return
         except Exception as e:
             print("[ERROR] ", e)
+            if replace_overwrite:
+                MusicQueue.clear()
+                MusicQueue.add(*former_queue)
             pass
 
     def do_next(self, line):
