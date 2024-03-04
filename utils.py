@@ -91,9 +91,9 @@ def split_tokens(line):
     word = ""
     for char in line:
         if not open_quotes and char != '"':
-            if char != " ":
+            if char != " " and char != "\n":
                 word += char
-            else:
+            elif char == " " or char == "\n":
                 final_words.append(word)
                 word = ""
         elif char == '"':
@@ -111,14 +111,3 @@ def split_tokens(line):
     while final_words.count(""):
         final_words.remove("")
     return (final_words)
-
-# def sift_digits(args):
-#     """Function to take an iterator and return back the\
-#     args if each arg are digits, and otherwise return only
-#     the non-digits strings."""
-#     arg_conditonal = [1 if arg.isdigit() else 0 for arg in args]
-#     arg_conditonal = reduce(lambda x, y: x*y, arg_conditonal)
-#     if arg_conditonal == 1:
-#         return args
-#     else:
-#         for arg in args:

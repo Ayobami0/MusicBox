@@ -58,7 +58,7 @@ class MusicPlayer(cmd.Cmd):
                     if path.isdigit() and int(path) < len(MusicQueue.list())
                     else Path(path)
                     for path in paths
-                }
+                    }
                 MusicQueue.clear()
                 MusicQueue.add(*play_list)  # Exception for bad song.
                 if len(MusicQueue.list()) < 1:
@@ -78,32 +78,23 @@ class MusicPlayer(cmd.Cmd):
 
         \rUsage:
             \r\tqueue [preset-index ... | filename ... | directory]\
- [overwrite] [load] [save]
-            \rOptions:
-            \r\toverwrite   Clear queue
-            \r\tload        Load queue from saved file
-            \r\tsave        Save queue to a file"""
+ [overwrite]"""
         replace_overwrite = False
         try:
             if line == "":
-                MusicQueue.add(*(s for s in Config.list_songs()))
+                MusicQueue.add(*[s for s in Config.list_songs()])
                 return
             paths = line.split()  # Queue with integer list.
             if len(paths) == 1 and not paths[0].isdigit():
-                if paths[0] == "load":
-                    MusicQueue.load()
-                elif paths[0] == "save":
-                    MusicQueue.save()
-                else:
-                    file_or_dir = Path(paths[0])
-                    if not file_or_dir.exists():
-                        raise Exception(
-                            f"No such file or directory: {file_or_dir}",
-                        )
-                    if file_or_dir.is_dir():
-                        MusicQueue.add(*file_or_dir.glob("*.mp3"))
-                        return
-                    MusicQueue.add(file_or_dir)
+                file_or_dir = Path(paths[0])
+                if not file_or_dir.exists():
+                    raise Exception(
+                        f"No such file or directory: {file_or_dir}",
+                    )
+                if file_or_dir.is_dir():
+                    MusicQueue.add(*file_or_dir.glob("*.mp3"))
+                    return
+                MusicQueue.add(file_or_dir)
             else:
                 if paths[-1] == "overwrite":
                     replace_overwrite = True
@@ -192,7 +183,6 @@ class MusicPlayer(cmd.Cmd):
                 print(self.do_pause.__doc__)
         except Exception as e:
             print("[ERROR]", e)
-        # channel.pause()
 
     def do_stop(self, line):
         """Stop the current playing song in the main queue.
@@ -207,7 +197,6 @@ class MusicPlayer(cmd.Cmd):
                 print(self.do_pause.__doc__)
         except Exception as e:
             print("[ERROR]", e)
-        # channel.pause()
 
     def do_resume(self, line):
         """Resume playback of the paused song in the main queue.
@@ -285,6 +274,7 @@ class MusicPlayer(cmd.Cmd):
                 print(self.do_preset.__doc__)
                 return
             overwrite = False
+            line = line + "\n"
             dirs = split_tokens(line)
             invalid_paths = set()
             valid_paths = set()
@@ -340,6 +330,7 @@ class MusicPlayer(cmd.Cmd):
         pass
 
     def do_exit(self, _):
+
         """Used to exit MusicBox.
         \rUsage: exit
 
