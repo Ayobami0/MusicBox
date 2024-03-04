@@ -1,13 +1,23 @@
 # MusicBox
-A music player for your command line built with python.
+##### A music player for your command line built with python.
 
 ![MusicBox](./screenshots/screenshot1.png "MusicBox")
+
+### Description
+___
+MusicBox is a command line music player built completely with python programming language - Using the cmd, pygame, mutagen and other packages.
+
+The implementation of MusicBox offers a simple text interface to interact with mp3 music files on your pc.
+
+This project is built as the foundations portfolio and collaboration project assigned by ALX
+
 ### Installation
 ___
 Requirements: python >= 3.8, pip, pygame, mutagen
 ##### Clone repsitory
 ```
-git clone {{url}} MusicBox && cd MusicBox
+git clone {{url}} MusicBox 
+cd MusicBox
 ```
 ##### Install requirements
 ```
