@@ -161,3 +161,4 @@ cython_debug/
 test
 pause
 pause_time
+default.json

@@ -1,10 +1,12 @@
 from pathlib import Path
+import json
 from utils import exec
 from shared import Cmd
 from library.config import Config
 
 
 class MusicQueue:
+    __save_file: str = 'default.json'
     __queue: list[Path] = []
     __current: int = -1
     __count: int = 0
@@ -63,6 +65,30 @@ class MusicQueue:
     @classmethod
     def get_current(cls) -> Path:
         return cls.__queue[cls.__current]
+
+    @classmethod
+    def save(cls) -> None:
+        songs = {k: str(v.resolve()) for k, v in enumerate(cls.__queue)}
+
+        with open(cls.__save_file, 'w', encoding='utf-8') as j_fp:
+            json.dump(songs, j_fp)
+
+    @classmethod
+    def load(cls) -> None:
+        try:
+            with open(cls.__save_file, 'r', encoding='utf-8') as j_fp:
+                s_queue: dict[int, str] = json.load(j_fp)
+                cls.clear()
+                cls.add(*(Path(p) for p in s_queue.values()))
+        except json.JSONDecodeError:
+            raise Exception(
+                'Unable to correctly parse stored queue. Bad Format.',
+            )
+        except FileNotFoundError:
+            with open(cls.__save_file, 'w', encoding='utf-8') as j_fp:
+                json.dump({}, j_fp)
+            raise FileNotFoundError(
+                'Queue file not found. Creating an empty default..')
 
     @classmethod
     def set_current(cls, curr: int):
