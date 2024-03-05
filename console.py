@@ -101,10 +101,11 @@ class MusicPlayer(cmd.Cmd):
                     former_queue = MusicQueue.list()[:]
                     paths = paths[:-1]
                     MusicQueue.clear()
-                preset_indexes = set()
+                # preset_indexes = set()
+                    preset_indexes = list()
                 for f in paths:
                     if f.isdigit():
-                        preset_indexes.add(int(f))
+                        preset_indexes.append(int(f))
                     elif not f.isdigit() and len(preset_indexes) != 0:
                         raise Exception(
                             """Arguments must be either preset-indexes,\
