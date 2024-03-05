@@ -105,6 +105,7 @@ class MusicPlayer(cmd.Cmd):
                     preset_indexes = list()
                 for f in paths:
                     if f.isdigit():
+                        # preset_indexes.add(int(f))
                         preset_indexes.append(int(f))
                     elif not f.isdigit() and len(preset_indexes) != 0:
                         raise Exception(

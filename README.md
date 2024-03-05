@@ -149,7 +149,7 @@ list queue
 We can start playing from song2.mp3, which is numerically reperesented by 2.
 
 ```
-play
+play 2
 ```
 
 **Persisting the queue (Saving and Loading a queue)**
