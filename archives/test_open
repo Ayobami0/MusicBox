@@ -1,7 +1,0 @@
-import os
-if __name__ == "__main__":
-    cwd = os.getcwd()
-    with open(os.path.join(cwd, "here"), "w") as f:
-        f.write("Testing open function")
-    with open(os.path.join(cwd, "here"), "r") as f:
-        print(f.read())
