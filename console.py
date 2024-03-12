@@ -78,7 +78,12 @@ class MusicPlayer(cmd.Cmd):
 
         \rUsage:
             \r\tqueue [preset-index ... | filename ... | directory]\
- [overwrite]"""
+ [overwrite] [load] [save]
+
+Option:
+\t load Load a queue from a saved file
+\t save Store a queue for play later overwriting the \
+previous"""
         replace_overwrite = False
         try:
             if line == "":
@@ -86,15 +91,23 @@ class MusicPlayer(cmd.Cmd):
                 return
             paths = line.split()  # Queue with integer list.
             if len(paths) == 1 and not paths[0].isdigit():
-                file_or_dir = Path(paths[0])
-                if not file_or_dir.exists():
-                    raise Exception(
-                        f"No such file or directory: {file_or_dir}",
-                    )
-                if file_or_dir.is_dir():
-                    MusicQueue.add(*file_or_dir.glob("*.mp3"))
+                cmd_arg = paths[0]
+                if cmd_arg == 'save':
+                    MusicQueue.save()
                     return
-                MusicQueue.add(file_or_dir)
+                elif cmd_arg == 'load':
+                    MusicQueue.load()
+                    return
+                else:
+                    file_or_dir = Path(cmd_arg)
+                    if not file_or_dir.exists():
+                        raise Exception(
+                            f"No such file or directory: {file_or_dir}",
+                        )
+                    if file_or_dir.is_dir():
+                        MusicQueue.add(*file_or_dir.glob("*.mp3"))
+                        return
+                    MusicQueue.add(file_or_dir)
             else:
                 preset_indexes = list()
                 if paths[-1] == "overwrite":
