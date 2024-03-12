@@ -58,7 +58,7 @@ class MusicPlayer(cmd.Cmd):
                     if path.isdigit() and int(path) < len(MusicQueue.list())
                     else Path(path)
                     for path in paths
-                    }
+                }
                 MusicQueue.clear()
                 MusicQueue.add(*play_list)  # Exception for bad song.
                 if len(MusicQueue.list()) < 1:
@@ -243,7 +243,7 @@ class MusicPlayer(cmd.Cmd):
                         show_metadata(song)
                 except IndexError:
                     raise Exception(f"{cmd[1]} is not part of the queue.")
-            elif cmd[0] == "":
+            elif cmd[0] != "":
                 show_metadata(Path(cmd[0]))
             else:
                 print(self.do_info.__doc__)
@@ -332,7 +332,6 @@ class MusicPlayer(cmd.Cmd):
         pass
 
     def do_exit(self, _):
-
         """Used to exit MusicBox.
         \rUsage: exit
 
