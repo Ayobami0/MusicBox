@@ -213,7 +213,7 @@ class MusicPlayer(cmd.Cmd):
         except Exception as e:
             print("[ERROR]", e)
 
-    def do_info(self, line):
+    def do_info(self, line: str):
         """Check the info of a music file, or the currently playing song.
 
         \rUsage:
@@ -224,10 +224,16 @@ class MusicPlayer(cmd.Cmd):
             \r\tqueue <song-number>     Shows the info of a song in queue by it's index.
         """
         try:
-            if line == "" or len(line.split()) > 2:
+            if line == "":
                 print(self.do_info.__doc__)
                 return
-            cmd = line.split()
+            if line.startswith('"') and line.endswith('"'):
+                cmd = [line.strip('"'),]
+            else:
+                cmd = line.split()
+                if len(cmd) > 2:
+                    print(self.do_info.__doc__)
+                    return
             if cmd[0] == "queue":
                 if len(cmd) < 2:
                     print(self.do_info.__doc__)
