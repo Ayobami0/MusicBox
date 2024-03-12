@@ -96,13 +96,13 @@ class MusicPlayer(cmd.Cmd):
                     return
                 MusicQueue.add(file_or_dir)
             else:
+                preset_indexes = list()
                 if paths[-1] == "overwrite":
                     replace_overwrite = True
                     former_queue = MusicQueue.list()[:]
                     paths = paths[:-1]
                     MusicQueue.clear()
                 # preset_indexes = set()
-                    preset_indexes = list()
                 for f in paths:
                     if f.isdigit():
                         # preset_indexes.add(int(f))
