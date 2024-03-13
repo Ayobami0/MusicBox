@@ -58,7 +58,7 @@ class MusicPlayer(cmd.Cmd):
                     if path.isdigit() and int(path) < len(MusicQueue.list())
                     else Path(path)
                     for path in paths
-                    }
+                }
                 MusicQueue.clear()
                 MusicQueue.add(*play_list)  # Exception for bad song.
                 if len(MusicQueue.list()) < 1:
@@ -78,7 +78,12 @@ class MusicPlayer(cmd.Cmd):
 
         \rUsage:
             \r\tqueue [preset-index ... | filename ... | directory]\
- [overwrite]"""
+ [overwrite] [load] [save]
+
+Option:
+\t load Load a queue from a saved file
+\t save Store a queue for play later overwriting the \
+previous"""
         replace_overwrite = False
         try:
             if line == "":
@@ -86,23 +91,31 @@ class MusicPlayer(cmd.Cmd):
                 return
             paths = line.split()  # Queue with integer list.
             if len(paths) == 1 and not paths[0].isdigit():
-                file_or_dir = Path(paths[0])
-                if not file_or_dir.exists():
-                    raise Exception(
-                        f"No such file or directory: {file_or_dir}",
-                    )
-                if file_or_dir.is_dir():
-                    MusicQueue.add(*file_or_dir.glob("*.mp3"))
+                cmd_arg = paths[0]
+                if cmd_arg == 'save':
+                    MusicQueue.save()
                     return
-                MusicQueue.add(file_or_dir)
+                elif cmd_arg == 'load':
+                    MusicQueue.load()
+                    return
+                else:
+                    file_or_dir = Path(cmd_arg)
+                    if not file_or_dir.exists():
+                        raise Exception(
+                            f"No such file or directory: {file_or_dir}",
+                        )
+                    if file_or_dir.is_dir():
+                        MusicQueue.add(*file_or_dir.glob("*.mp3"))
+                        return
+                    MusicQueue.add(file_or_dir)
             else:
+                preset_indexes = list()
                 if paths[-1] == "overwrite":
                     replace_overwrite = True
                     former_queue = MusicQueue.list()[:]
                     paths = paths[:-1]
                     MusicQueue.clear()
                 # preset_indexes = set()
-                    preset_indexes = list()
                 for f in paths:
                     if f.isdigit():
                         # preset_indexes.add(int(f))
@@ -213,7 +226,7 @@ class MusicPlayer(cmd.Cmd):
         except Exception as e:
             print("[ERROR]", e)
 
-    def do_info(self, line):
+    def do_info(self, line: str):
         """Check the info of a music file, or the currently playing song.
 
         \rUsage:
@@ -224,10 +237,16 @@ class MusicPlayer(cmd.Cmd):
             \r\tqueue <song-number>     Shows the info of a song in queue by it's index.
         """
         try:
-            if line == "" or len(line.split()) > 2:
+            if line == "":
                 print(self.do_info.__doc__)
                 return
-            cmd = line.split()
+            if line.startswith('"') and line.endswith('"'):
+                cmd = [line.strip('"'),]
+            else:
+                cmd = line.split()
+                if len(cmd) > 2:
+                    print(self.do_info.__doc__)
+                    return
             if cmd[0] == "queue":
                 if len(cmd) < 2:
                     print(self.do_info.__doc__)
@@ -243,7 +262,7 @@ class MusicPlayer(cmd.Cmd):
                         show_metadata(song)
                 except IndexError:
                     raise Exception(f"{cmd[1]} is not part of the queue.")
-            elif cmd[0] == "":
+            elif cmd[0] != "":
                 show_metadata(Path(cmd[0]))
             else:
                 print(self.do_info.__doc__)
@@ -332,7 +351,6 @@ class MusicPlayer(cmd.Cmd):
         pass
 
     def do_exit(self, _):
-
         """Used to exit MusicBox.
         \rUsage: exit
 
