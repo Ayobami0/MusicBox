@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MusicBox - Control Your Music Mix</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="#intro">Home</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#about">About</a></li>
+            </ul>
+        </nav>
+    </header>
+    <section id="intro">
+        <img src="./assets/features/feature_1_all.png" alt="MusicBox Cover Image">
+        <h1>MusicBox</h1>
+        <p>Command Your Sound Experience</p>
+        <a href="https://github.com/Ayobami0/MusicBox" class="btn">Learn More</a>
+    </section>
+    <section id="features">
+        <h1>FEATURES</h1>
+        <div class="feature-slider">
+            <button class="slide-btn left" onclick="previousFeature()">❮</button>
+            <div class="feature" id="feature1">
+                <div class="image-holder" id="image-holder-1"></div>
+                <h2>Play, Pause and Resume songs</h2>
+                <p>Feature1 Description</p>
+                <img src="assets/features/feature_1_all.png" class="feature-img"></img>
+            </div>
+            <div class="feature" id="feature2" style="display:none;">
+                <div class="image-holder" id="image-holder-2"></div>
+                <h2>Preset directories to call songs from.</h2>
+                <p>Feature2 Description</p>
+                <img src="assets/features/feature_2_preset.png" class="feature-img"></img>
+            </div>
+            <div class="feature" id="feature3" style="display:none;">
+                <div class="image-holder" id="image-holder-3"></div>
+                <h2>Get the info of songs</h2>
+                <p>Feature3 Description</p>
+                <img src="assets/features/feature_3_info.png" class="feature-img"></img>
+            </div>
+            <div class="feature" id="feature4" style="display:none;">
+                <div class="image-holder" id="image-holder-4"></div>
+                <h2>Queue songs to play after each other, save queues and play them later</h2>
+                <p>Feature4 Description</p>
+                <img src="assets/features/feature_4_queue.png" class="feature-img"></img>
+            </div>
+            <button class="slide-btn right" onclick="nextFeature()">❯</button>
+        </div>
+    </section>
+    <section id="about">
+        <h1>ABOUT</h1>
+        <p>"Music and Sounds are non-negotiable events that transpire in our daily lives. Having total control on the
+            mix of the song you want is just some text away. MusicBox is developed with ease of use on the terminal in
+            mind."</p>
+        <div class="developer-info">
+            <h3>Loris Ipsum</h3>
+            <p>He is a great software engineer with a passion for music and technology.</p>
+            <a href="https://github.com/lorisipsum">GitHub</a> |
+            <a href="https://linkedin.com/in/lorisipsum">LinkedIn</a> |
+            <a href="https://twitter.com/lorisipsum">Twitter</a>
+        </div>
+        <div class="developer-info">
+            <h3>Dolor Amet</h3>
+            <p>An innovative coder who believes in the power of music to change the world.</p>
+            <a href="https://github.com/doloramet">GitHub</a> |
+            <a href="https://linkedin.com/in/doloramet">LinkedIn</a> |
+            <a href="https://twitter.com/doloramet">Twitter</a>
+        </div>
+        <div>
+            <a href="https://github.com/Ayobami0/MusicBox" class="btn">Link to MusicBox</a>
+        </div>
+    </section>
+</body>
+
+</html>
