@@ -98,6 +98,10 @@ previous"""
                 elif cmd_arg == 'load':
                     MusicQueue.load()
                     return
+                elif cmd_arg == "overwrite":
+                    former_queue = MusicQueue.list()[:]
+                    MusicQueue.clear()
+                    MusicQueue.add(*[s for s in Config.list_songs()])
                 else:
                     file_or_dir = Path(cmd_arg)
                     if not file_or_dir.exists():
