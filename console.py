@@ -178,7 +178,9 @@ previous"""
         \rOptions:
             \r\tqueue   Show only queued songs"""
         if line == "":
-            list_songs(Config.list_dir())
+            # list_songs(Config.list_dir())
+            for idx, mus in enumerate(Config.list_songs()):
+                print(idx, mus)
             return
         elif line == "queue":
             for i, s in enumerate(MusicQueue.list()):

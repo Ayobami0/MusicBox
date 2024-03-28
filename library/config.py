@@ -49,6 +49,7 @@ class Config:
 
         for d in cls.__PRESET_DIRS:
             songs.update(d.glob('*.mp3'))
+            # songs.update(d.glob('**/*.mp3')) #Change to recursive.
         return [s for s in songs]
 
     @classmethod
