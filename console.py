@@ -98,6 +98,10 @@ previous"""
                 elif cmd_arg == 'load':
                     MusicQueue.load()
                     return
+                elif cmd_arg == "overwrite":
+                    former_queue = MusicQueue.list()[:]
+                    MusicQueue.clear()
+                    MusicQueue.add(*[s for s in Config.list_songs()])
                 else:
                     file_or_dir = Path(cmd_arg)
                     if not file_or_dir.exists():
@@ -178,7 +182,9 @@ previous"""
         \rOptions:
             \r\tqueue   Show only queued songs"""
         if line == "":
-            list_songs(Config.list_dir())
+            # list_songs(Config.list_dir())
+            for idx, mus in enumerate(Config.list_songs()):
+                print(idx, mus)
             return
         elif line == "queue":
             for i, s in enumerate(MusicQueue.list()):
